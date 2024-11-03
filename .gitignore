@@ -1,0 +1,51 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env/
+.venv/
+
+# Configuration files with sensitive data
+.env
+credentials.yml
+
+# Logs and runtime files
+*.log
+logs/
+events.db
+*.db
+*.sqlite
+results/
+models/
+
+# Rasa internal folder
+.rasa/
+
+# Rasa generated model files
+models/
+
+# Cache files
+.cache/
+*.pkl
+*.joblib
+
+# Jupyter Notebook checkpoints (if using notebooks in your Rasa project)
+.ipynb_checkpoints
+
+# VS Code configuration files
+.vscode/
+
+# PyCharm configuration files
+.idea/
+
+# macOS specific files
+.DS_Store
+
+# Python egg files
+*.egg
+*.egg-info/
+dist/
+build/
