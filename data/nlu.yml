@@ -1,210 +1,42 @@
 version: "3.1"
 
 nlu:
-  - intent: greet
+  - intent: affirm
     examples: |
-      - Hi
-      - Hello
-      - Helo
-      - Hey
-      - Hi there
+      - Yes
+      - Yeah
+      - Sure
+      - Absolutely
+      - Of course
+
+  - intent: deny
+    examples: |
+      - No
+      - Nope
+      - Nah
+      - Not really
+      - Negative
+
+  - intent: ask_about_interview_questions
+    examples: |
+      - Can you provide me with some interview questions?
+      - What are some common interview questions?
+      - Can you give me some interview questions?
+      - What are some questions I might be asked in an interview?
+      - Can you provide me with some questions I might be asked in an interview?
 
   - intent: goodbye
     examples: |
       - Goodbye
       - Bye
       - See you later
-      - Bye bye
-      - Take care
+      - Farewell
+      - Catch you later
 
   - intent: bot_challenge
     examples: |
       - Are you a bot?
-      - Are you real?
-      - Are you human?
-      - Are you a robot?
-      - Is this a chatbot?
-
-  - intent: thank_you
-    examples: |
-      - Thank you
-      - Thanks
-      - Thnks a lot
-      - Appreciate it
-      - Thanks for the help
-
-  - intent: help_request
-    examples: |
-      - Can you help me?
-      - I need assistance
-      - Help me please
-      - Can I get some help?
-      - I need help with my interview
-
-  - intent: ask_interview_tips
-    examples: |
-      - Do you have any interview tips?
-      - How can I prepare for an interview?
-      - Any tips for interviews?
-      - How to do well in an interview?
-      - Interview tips?
-
-  - intent: research_company
-    examples: |
-      - How do I research a company?
-      - What should I know about the company?
-      - How can I find out about the company?
-      - Company research tips?
-      - What should I research about the company?
-
-  - intent: answering_questions
-    examples: |
-      - How should I answer interview questions?
-      - Any advice on answering questions?
-      - How to answer questions in an interview?
-      - Tips for answering questions
-      - How to respond to interview questions?
-
-  - intent: asking_questions
-    examples: |
-      - What questions should I ask in an interview?
-      - Good questions to ask the interviewer?
-      - What can I ask in an interview?
-      - Can you suggest questions to ask?
-      - What are some questions I should ask?
-
-  - intent: body_language
-    examples: |
-      - What body language should I use in an interview?
-      - Tips for body language in interviews
-      - How should I use body language?
-      - Any advice on non-verbal communication?
-      - How to use body language in interviews?
-
-  - intent: practice_interview_questions
-    examples: |
-      - Can we practice interview questions?
-      - Let's do some interview practice
-      - I want to practice questions
-      - Ask me interview questions
-      - Mock interview questions, please
-
-  - intent: answer_behavioral_question
-    examples: |
-      - How do I answer behavioral questions?
-      - Tips for answering behavioral questions?
-      - Behavioral question advice?
-      - How should I respond to behavior questions?
-      - Any tips on behavioral interview questions?
-
-  - intent: strengths_weaknesses
-    examples: |
-      - How do I talk about my strengths?
-      - What's a good weakness to mention?
-      - How do I answer the strengths and weaknesses question?
-      - What are good strengths for an interview?
-      - Tips for strengths and weaknesses?
-
-  - intent: tell_me_about_yourself
-    examples: |
-      - How do I answer "Tell me about yourself"?
-      - Tell me about yourself question tips?
-      - How should I introduce myself?
-      - What's a good response to "Tell me about yourself"?
-      - Help with "Tell me about yourself" answer
-
-  - intent: salary_expectations
-    examples: |
-      - How do I discuss salary expectations?
-      - What should I say about salary?
-      - Salary expectations advice?
-      - How do I answer questions about salary?
-      - Tips for discussing salary in an interview?
-
-  - intent: building_confidence
-    examples: |
-      - How can I feel more confident in interviews?
-      - I need help building confidence
-      - Tips for confidence in interviews?
-      - How do I boost my confidence?
-      - Advice for feeling confident?
-
-  - intent: overcoming_anxiety
-    examples: |
-      - How do I calm my interview nerves?
-      - Tips for dealing with interview anxiety?
-      - Help with anxiety for interviews
-      - How do I reduce interview anxiety?
-      - Advice on calming interview nerves?
-
-  - intent: technical_preparation
-    examples: |
-      - How do I prepare for a technical interview?
-      - Tips for technical interviews?
-      - Technical interview preparation advice?
-      - How should I get ready for a technical interview?
-      - Preparing for a technical interview
-
-  - intent: solve_coding_problems
-    examples: |
-      - Can you help with coding problems?
-      - Tips for solving coding problems
-      - How to prepare for coding interviews?
-      - Coding interview practice?
-      - Help with coding questions?
-
-  - intent: send_thank_you_note
-    examples: |
-      - Should I send a thank-you note after an interview?
-      - How do I write a thank-you note?
-      - Should I follow up after the interview?
-      - When should I send a thank-you email?
-      - Follow-up after an interview advice?
-
-  - intent: post_interview_feedback
-    examples: |
-      - How can I ask for feedback after an interview?
-      - Should I ask for interview feedback?
-      - How to request feedback?
-      - Feedback request after interview?
-      - Tips for getting feedback after an interview?
-
-  - intent: specific_industry_interview
-    examples: |
-      - What should I expect in a finance interview?
-      - How do I prepare for a tech role interview?
-      - Interview tips for the healthcare industry?
-      - Industry-specific interview advice?
-      - Interviewing for specific fields tips?
-
-  - intent: remote_interviews
-    examples: |
-      - How do I prepare for a virtual interview?
-      - Tips for remote interviews?
-      - Any advice for video interviews?
-      - Preparing for online interviews?
-      - Virtual interview preparation?
-
-  - intent: mock_interview_request
-    examples: |
-      - Can we do a mock interview?
-      - I want to do a practice interview
-      - Let's start a mock interview
-      - Can you do a mock interview with me?
-      - Mock interview session, please
-
-  - intent: resume_tips
-    examples: |
-      - Can you help with my resume?
-      - How do I improve my CV?
-      - Resume writing tips?
-      - What makes a good resume?
-      - How should I update my resume?
-
-  - intent: common_mistakes
-    examples: |
-      - What mistakes should I avoid in interviews?
-      - Common interview errors?
-      - What are common mistakes in interviews?
-      - How do I avoid interview mistakes?
-      - Tips on avoiding interview errors?
+      - Are you a human
+      - Am I speaking to a bot?
+      - Am I speaking to a human?
+      - Are you a real person?

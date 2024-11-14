@@ -1,125 +1,56 @@
 version: "3.1"
 
 intents:
-  - greet
+  - affirm
+  - deny
+  - ask_about_interview_questions
   - goodbye
   - bot_challenge
-  - thank_you
-  - help_request
-  - ask_interview_tips
-  - research_company
-  - answering_questions
-  - asking_questions
-  - body_language
-  - practice_interview_questions
-  - answer_behavioral_question
-  - strengths_weaknesses
-  - tell_me_about_yourself
-  - salary_expectations
-  - building_confidence
-  - overcoming_anxiety
-  - technical_preparation
-  - solve_coding_problems
-  - send_thank_you_note
-  - post_interview_feedback
-  - specific_industry_interview
-  - remote_interviews
-  - mock_interview_request
-  - resume_tips
-  - common_mistakes
-  - user_response
+  - greet
 
 actions:
-  - action_provide_feedback
-  - action_ask_mock_interview_question
+  - action_provide_interview_questions
+  - validate_additional_question_details_form
+  - action_expand_on_interview_question
+
+forms:
+  additional_question_details_form:
+    required_slots:
+      - question_detail_number
 
 slots:
-  question_number:
-    type: float
-    initial_value: 1.0
+  last_provided_question_ids:
+    type: list
     mappings:
-      - type: from_intent
-        intent: mock_interview_request
-        value: 1.0
+      - type: custom
+    influence_conversation: false
+  question_detail_number:
+    type: text
+    mappings:
+      - type: from_text
+    influence_conversation: false
 
 responses:
-  utter_greet:
-    - text: "Hello! How can I help you prepare for your interview today?"
+  utter_ask_which_question_to_give_details_for:
+    - text: "Which question would you like more details on? Please provide the question number (1-5)."
 
-  utter_goodbye:
-    - text: "Goodbye! Good luck with your interview preparation!"
+  uttter_how_else_can_i_help:
+    - text: "How else can I help you?"
+
+  utter_greet:
+    - text: "Hello! How can I help you today?"
+
+  utter_ask_additional_question_details_form_wants_more_info:
+    - text: "Would you like more information on any of the questions?"
+
+  utter_ask_additional_question_details_form_question_detail_number:
+    - text: "Which question would you like more details on? Please provide the question number."
 
   utter_bot_challenge:
-    - text: "I’m here to help you with interview preparation. Let me know if you have any questions!"
+    - text: "I am a bot."
 
-  utter_thank_you:
-    - text: "You're very welcome! I'm here to help any time."
-
-  utter_help_request:
-    - text: "I'm here to help with any part of the interview process. What would you like to focus on?"
-
-  utter_ask_interview_tips:
-    - text: "A few tips: research the company, practice your answers, and stay calm. Would you like help with specific questions?"
-
-  utter_research_company:
-    - text: "Researching the company is key! Look into their mission, values, recent projects, and industry trends. Would you like tips on specific areas?"
-
-  utter_answering_questions:
-    - text: "Answering questions well involves being concise and relevant. Use examples when possible, and focus on your skills and experiences."
-
-  utter_asking_questions:
-    - text: "Good questions show your interest! Ask about the team, the role's challenges, and growth opportunities."
-
-  utter_body_language:
-    - text: "Positive body language includes eye contact, a friendly smile, and a confident posture. It can make a big difference!"
-
-  utter_practice_interview_questions:
-    - text: "I’d be happy to practice questions with you! Let's start with a common one: Can you tell me about yourself?"
-
-  utter_answer_behavioral_question:
-    - text: "For behavioral questions, use the STAR method: Situation, Task, Action, Result. Would you like to try one together?"
-
-  utter_strengths_weaknesses:
-    - text: "For strengths, choose something relevant to the role; for weaknesses, choose one you’re actively improving."
-
-  utter_tell_me_about_yourself:
-    - text: "This question is often an opener. Start with a summary of your background, highlight relevant experiences, and finish with your interest in the role."
-
-  utter_salary_expectations:
-    - text: "When discussing salary, you can ask about the range for the role or give a range based on industry standards and your experience."
-
-  utter_building_confidence:
-    - text: "Confidence comes with preparation. Practice answering questions, know your skills, and visualize a positive outcome!"
-
-  utter_overcoming_anxiety:
-    - text: "Try some deep breaths and positive visualization before the interview. Preparation helps reduce anxiety as well!"
-
-  utter_technical_preparation:
-    - text: "For technical interviews, practice relevant skills, review core concepts, and work through common problems for the role."
-
-  utter_solve_coding_problems:
-    - text: "Practice coding problems regularly, focus on problem-solving approaches, and review your solutions to learn from mistakes."
-
-  utter_send_thank_you_note:
-    - text: "Sending a thank-you note shows professionalism. Express appreciation for their time and mention something specific from the interview."
-
-  utter_post_interview_feedback:
-    - text: "To request feedback, send a polite follow-up email after the process concludes. Not all companies can provide feedback, but it doesn’t hurt to ask."
-
-  utter_specific_industry_interview:
-    - text: "Industry-specific interviews often focus on relevant skills and scenarios. Do you have a specific industry in mind?"
-
-  utter_remote_interviews:
-    - text: "For remote interviews, ensure your tech setup is ready, dress professionally, and keep your environment distraction-free."
-
-  utter_mock_interview_request:
-    - text: "Sure, let’s start a mock interview. First question: Can you tell me about yourself?"
-
-  utter_resume_tips:
-    - text: "Make sure your resume is clear, concise, and tailored to the job. Highlight your skills, experience, and achievements."
-
-  utter_common_mistakes:
-    - text: "Common interview mistakes include not preparing, speaking negatively about previous roles, and not asking questions. Let me know if you want more specific tips."
+  utter_goodbye:
+    - text: "Goodbye!"
 
 session_config:
   session_expiration_time: 60

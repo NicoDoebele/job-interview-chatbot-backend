@@ -29,65 +29,116 @@
 from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
-from rasa_sdk.events import SlotSet
+from rasa_sdk.events import SlotSet, ActiveLoop
+#from supabase import create_client, Client
+from rasa_sdk.forms import FormValidationAction
+from rasa_sdk.types import DomainDict
+import random
+import logging
 
+logging.getLogger(__name__)
+
+def get_interview_questions():
+    #public_url: str = "https://jyoivgbjcjpdkivdtlcb.supabase.co"
+    #public_key: str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5b2l2Z2JqY2pwZGtpdmR0bGNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzExNDE0MjUsImV4cCI6MjA0NjcxNzQyNX0.U6F_dMw2brDiSeEIn9HvQshLpypr07Z082VpEamRKe0"
+    #supabase: Client = create_client(public_url, public_key)
+
+    #interview_question_response = supabase.table("interview_questions").select("*").execute()
+    #interview_questions = interview_question_response["data"]
+
+    #return interview_questions
+
+    return [{"id": 1, "question": "Tell me about yourself."}, 
+            {"id": 2, "question": "What are your strengths and weaknesses?"},
+            {"id": 3, "question": "Why do you want to work here?"},
+            {"id": 4, "question": "Where do you see yourself in 5 years?"},
+            {"id": 5, "question": "What is your greatest achievement?"}]
+
+class ActionProvideInterviewQuestions(Action):
+    def name(self) -> Text:
+        return "action_provide_interview_questions"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        NUM_QUESTIONS = 5
+        interview_questions = get_interview_questions()
+        selected_questions = random.sample(interview_questions, NUM_QUESTIONS)
+        
+        question_text = "Here are some interview questions to help you prepare: \n"
+        for i, question in enumerate(selected_questions):
+            question_text += f"{i+1}. {question['question']} \n"
+        question_text += "Would you like more information on any of these questions?"
+
+        dispatcher.utter_message(text=question_text)
+
+        ids = [question["id"] for question in selected_questions]
+        return [SlotSet("last_provided_question_ids", ids),]
+    
+class ActionExpandOnInterviewQuestion(Action):
+    def name(self) -> Text:
+        return "action_expand_on_interview_question"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        question_number = tracker.get_slot("question_detail_number")
+        question_ids = tracker.get_slot("last_provided_question_ids")
+
+        question_id = question_ids[int(question_number) - 1]
+
+        interview_questions = get_interview_questions()
+        selected_question = [question for question in interview_questions if question["id"] == question_id][0]
+        
+        question_text = f"Here is the question you wanted more information about: \n"
+        question_text += f"{selected_question['question']} \n"
+        question_text += "Would you like more information about another question?"
+
+        dispatcher.utter_message(text=question_text)
+
+        return [SlotSet("question_detail_number", None)]
+    
 class ActionAskMockInterviewQuestion(Action):
     def name(self) -> Text:
         return "action_ask_mock_interview_question"
-
+    
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        interview_questions = get_interview_questions()
+        selected_question = random.sample(interview_questions, 1)[0]
         
-        # Get the current question number from the slot
-        question_number = tracker.get_slot("question_number") or 1
+        question_text = "Answer this interview question: \n"
+        question_text += f"{selected_question['question']} \n"
 
-        # Dispatch appropriate question based on the current number
-        if question_number == 1:
-            dispatcher.utter_message(text="Let's start the mock interview! First question: Can you tell me about yourself?")
-        elif question_number == 2:
-            dispatcher.utter_message(text="Great! Next question: What are your strengths and weaknesses?")
-        elif question_number == 3:
-            dispatcher.utter_message(text="Now, how would you handle a challenging situation with a team member?")
-        else:
-            dispatcher.utter_message(text="That's all for now! Great job on the practice interview.")
+        dispatcher.utter_message(text=question_text)
 
-        # Move to the next question for the next interaction
-        return [SlotSet("question_number", question_number + 1)]
+        return [SlotSet("last_mock_question_id", str(selected_question["id"]))] 
 
-
-class ActionProvideFeedback(Action):
+class ValidateAdditionQuestionDetailsForm(FormValidationAction):
     def name(self) -> Text:
-        return "action_provide_feedback"
+        return "validate_additional_question_details_form"
 
-    def run(self, dispatcher: CollectingDispatcher,
-            tracker: Tracker,
-            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        
-        # Get the current question number from the slot
-        question_number = tracker.get_slot("question_number") or 1
-        user_response = tracker.latest_message.get("text", "").lower()
+    def validate_question_detail_number(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        """Validate question detail number value."""
 
-        # Provide feedback based on the current question number
-        if question_number == 1:
-            if "experience" in user_response or "background" in user_response:
-                dispatcher.utter_message(text="Nice job mentioning your experience! Including relevant background helps set the stage.")
-            else:
-                dispatcher.utter_message(text="Try to include a brief summary of your experience or background in your answer.")
-        
-        elif question_number == 2:
-            if "strength" in user_response and "weakness" in user_response:
-                dispatcher.utter_message(text="Good job covering both strengths and weaknesses!")
-            else:
-                dispatcher.utter_message(text="Remember to mention both a strength relevant to the job and a weakness you're working to improve.")
+        logging.info(f"Slot value question detail number: {slot_value}")
 
-        elif question_number == 3:
-            if "team member" in user_response or "communication" in user_response:
-                dispatcher.utter_message(text="Great! Highlighting communication and teamwork is important.")
-            else:
-                dispatcher.utter_message(text="Try to emphasize communication and teamwork when discussing challenges with colleagues.")
-        
+        if str(slot_value) in ["1", "2", "3", "4", "5"]:
+            # validation succeeded, set the value of the "cuisine" slot to value
+            return {"question_detail_number": str(slot_value)}
+        elif slot_value.lower() in ["one", "two", "three", "four", "five"]:
+            return {"question_detail_number": str(["one", "two", "three", "four", "five"].index(slot_value.lower()) + 1)}
         else:
-            dispatcher.utter_message(text="Nice response! Keep practicing for confidence.")
-
-        return []
+            # validation failed, set this slot to None so that the
+            # user will be asked for the slot again
+            return {"question_detail_number": None}

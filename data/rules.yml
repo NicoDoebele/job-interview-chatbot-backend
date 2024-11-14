@@ -1,6 +1,35 @@
 version: "3.1"
 
 rules:
+  - rule: Provide interview questions when asked
+    steps:
+      - intent: ask_about_interview_questions
+      - action: action_provide_interview_questions
+
+  - rule: Start form when asking about interview question details
+    steps:
+      - action: action_provide_interview_questions
+      - intent: affirm
+      - action: additional_question_details_form
+      - active_loop: additional_question_details_form
+
+  - rule: Start form when asking about interview question details stage two
+    steps:
+      - action: action_expand_on_interview_question
+      - intent: affirm
+      - action: additional_question_details_form
+      - active_loop: additional_question_details_form
+
+  - rule: Submit form
+    condition:
+      - active_loop: additional_question_details_form
+    steps:
+      - action: additional_question_details_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_expand_on_interview_question
+
   - rule: Say goodbye anytime the user says goodbye
     steps:
       - intent: goodbye
