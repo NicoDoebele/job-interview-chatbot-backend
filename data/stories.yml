@@ -14,3 +14,20 @@ stories:
       - action: utter_bot_challenge
       - intent: goodbye
       - action: utter_goodbye
+
+  - story: User wants no additional details
+    steps:
+      - intent: ask_about_interview_questions
+      - action: action_provide_interview_questions
+      - intent: deny
+      - action: utter_how_else_can_i_help
+
+  - story: User wants additional details about a question 3
+    steps:
+      - intent: ask_about_interview_questions
+      - action: action_provide_interview_questions
+      - intent: affirm
+      - action: additional_question_details_form
+      - slot_was_set:
+          - question_detail_number: "3"
+      - action: action_expand_on_interview_question

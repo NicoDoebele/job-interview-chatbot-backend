@@ -1,58 +1,32 @@
-# This files contains your custom actions which can be used to run
-# custom Python code.
-#
-# See this guide on how to implement these action:
-# https://rasa.com/docs/rasa/custom-actions
-
-
-# This is a simple example for a custom action which utters "Hello World!"
-
-# from typing import Any, Text, Dict, List
-#
-# from rasa_sdk import Action, Tracker
-# from rasa_sdk.executor import CollectingDispatcher
-#
-#
-# class ActionHelloWorld(Action):
-#
-#     def name(self) -> Text:
-#         return "action_hello_world"
-#
-#     def run(self, dispatcher: CollectingDispatcher,
-#             tracker: Tracker,
-#             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-#
-#         dispatcher.utter_message(text="Hello World!")
-#
-#         return []
-
 from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import SlotSet, ActiveLoop
-#from supabase import create_client, Client
 from rasa_sdk.forms import FormValidationAction
 from rasa_sdk.types import DomainDict
+#from supabase import create_client, Client # incompatible with rasa
 import random
 import logging
+import requests
 
 logging.getLogger(__name__)
 
+cached_interview_questions = []
+
 def get_interview_questions():
-    #public_url: str = "https://jyoivgbjcjpdkivdtlcb.supabase.co"
-    #public_key: str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5b2l2Z2JqY2pwZGtpdmR0bGNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzExNDE0MjUsImV4cCI6MjA0NjcxNzQyNX0.U6F_dMw2brDiSeEIn9HvQshLpypr07Z082VpEamRKe0"
-    #supabase: Client = create_client(public_url, public_key)
+    global cached_interview_questions
 
-    #interview_question_response = supabase.table("interview_questions").select("*").execute()
-    #interview_questions = interview_question_response["data"]
+    # allows access to any public unprotected claims in the supabase "job-chatbot" project
+    public_url: str = "https://jyoivgbjcjpdkivdtlcb.supabase.co"
+    public_key: str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5b2l2Z2JqY2pwZGtpdmR0bGNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzExNDE0MjUsImV4cCI6MjA0NjcxNzQyNX0.U6F_dMw2brDiSeEIn9HvQshLpypr07Z082VpEamRKe0"
+    question_path: str = "/rest/v1/interview_questions"
 
-    #return interview_questions
+    if cached_interview_questions:
+        return cached_interview_questions
 
-    return [{"id": 1, "question": "Tell me about yourself."}, 
-            {"id": 2, "question": "What are your strengths and weaknesses?"},
-            {"id": 3, "question": "Why do you want to work here?"},
-            {"id": 4, "question": "Where do you see yourself in 5 years?"},
-            {"id": 5, "question": "What is your greatest achievement?"}]
+    response = requests.get(public_url + question_path, headers={"apikey": public_key, "Authorization": f"Bearer {public_key}"})
+    cached_interview_questions = response.json()
+    return cached_interview_questions
 
 class ActionProvideInterviewQuestions(Action):
     def name(self) -> Text:
@@ -91,10 +65,14 @@ class ActionExpandOnInterviewQuestion(Action):
 
         interview_questions = get_interview_questions()
         selected_question = [question for question in interview_questions if question["id"] == question_id][0]
+
+        lowercase_first_letter = lambda s: s[:1].lower() + s[1:] if s else ''
         
-        question_text = f"Here is the question you wanted more information about: \n"
-        question_text += f"{selected_question['question']} \n"
-        question_text += "Would you like more information about another question?"
+        question_text = f"Here are some tips on how to answer the question: {selected_question['question']} \n"
+        question_text += f"When answering this question {lowercase_first_letter(selected_question['good_answer_tips'])} \n"
+        question_text += f"Try to orientate your answer around keywords like {selected_question['good_answer_keywords']} to make a good impression. \n"
+        question_text += f"This is what a good answer could look like: {selected_question['good_answer_example']} \n"
+        question_text += "Would you like detailed information about another question?"
 
         dispatcher.utter_message(text=question_text)
 
@@ -118,7 +96,7 @@ class ActionAskMockInterviewQuestion(Action):
 
         return [SlotSet("last_mock_question_id", str(selected_question["id"]))] 
 
-class ValidateAdditionQuestionDetailsForm(FormValidationAction):
+class ValidateAdditionalQuestionDetailsForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_additional_question_details_form"
 
@@ -131,14 +109,11 @@ class ValidateAdditionQuestionDetailsForm(FormValidationAction):
     ) -> Dict[Text, Any]:
         """Validate question detail number value."""
 
-        logging.info(f"Slot value question detail number: {slot_value}")
-
         if str(slot_value) in ["1", "2", "3", "4", "5"]:
-            # validation succeeded, set the value of the "cuisine" slot to value
             return {"question_detail_number": str(slot_value)}
+        elif slot_value.lower() in ["1.", "2.", "3.", "4.", "5."]:
+            return {"question_detail_number": str(["1.", "2.", "3.", "4.", "5."].index(slot_value.lower()) + 1)}
         elif slot_value.lower() in ["one", "two", "three", "four", "five"]:
             return {"question_detail_number": str(["one", "two", "three", "four", "five"].index(slot_value.lower()) + 1)}
         else:
-            # validation failed, set this slot to None so that the
-            # user will be asked for the slot again
             return {"question_detail_number": None}

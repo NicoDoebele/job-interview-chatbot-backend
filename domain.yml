@@ -31,20 +31,14 @@ slots:
     influence_conversation: false
 
 responses:
-  utter_ask_which_question_to_give_details_for:
-    - text: "Which question would you like more details on? Please provide the question number (1-5)."
-
   uttter_how_else_can_i_help:
     - text: "How else can I help you?"
 
   utter_greet:
     - text: "Hello! How can I help you today?"
 
-  utter_ask_additional_question_details_form_wants_more_info:
-    - text: "Would you like more information on any of the questions?"
-
   utter_ask_additional_question_details_form_question_detail_number:
-    - text: "Which question would you like more details on? Please provide the question number."
+    - text: "Which question would you like more details on? Please provide the question number [1-5]."
 
   utter_bot_challenge:
     - text: "I am a bot."

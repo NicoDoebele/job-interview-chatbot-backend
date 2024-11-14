@@ -25,6 +25,14 @@ nlu:
       - What are some questions I might be asked in an interview?
       - Can you provide me with some questions I might be asked in an interview?
 
+  - intent: greet
+    examples: |
+      - Hi
+      - Hello
+      - Hey
+      - Hi there
+      - Hello there
+
   - intent: goodbye
     examples: |
       - Goodbye
