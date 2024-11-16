@@ -7,28 +7,50 @@ intents:
   - goodbye
   - bot_challenge
   - greet
+  - ask_for_mock_interview_question
 
 actions:
   - action_provide_interview_questions
   - validate_additional_question_details_form
   - action_expand_on_interview_question
+  - action_ask_mock_interview_question
+  - action_check_mock_answer
+  - action_validate_slot_mappings
 
 forms:
   additional_question_details_form:
     required_slots:
       - question_detail_number
+  mock_interview_question_form:
+    required_slots:
+      - mock_interview_answer
 
 slots:
   last_provided_question_ids:
     type: list
+    influence_conversation: false
     mappings:
       - type: custom
-    influence_conversation: false
   question_detail_number:
     type: text
+    influence_conversation: false
     mappings:
       - type: from_text
+        conditions:
+          - active_loop: additional_question_details_form
+  last_mock_question_id:
+    type: text
     influence_conversation: false
+    mappings:
+      - type: custom
+  mock_interview_answer:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: mock_interview_question_form
+            requested_slot: mock_interview_answer
 
 responses:
   uttter_how_else_can_i_help:
@@ -39,6 +61,9 @@ responses:
 
   utter_ask_additional_question_details_form_question_detail_number:
     - text: "Which question would you like more details on? Please provide the question number [1-5]."
+
+  utter_ask_mock_interview_question_form_mock_interview_answer:
+    - text: "Please type your answer."
 
   utter_bot_challenge:
     - text: "I am a bot."

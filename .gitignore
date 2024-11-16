@@ -49,3 +49,6 @@ models/
 *.egg-info/
 dist/
 build/
+
+# interactive learning files
+story_graph.dot

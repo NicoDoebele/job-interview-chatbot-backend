@@ -1,5 +1,5 @@
 from typing import Any, Text, Dict, List
-from rasa_sdk import Action, Tracker
+from rasa_sdk import Action, Tracker, ValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import SlotSet, ActiveLoop
 from rasa_sdk.forms import FormValidationAction
@@ -94,7 +94,34 @@ class ActionAskMockInterviewQuestion(Action):
 
         dispatcher.utter_message(text=question_text)
 
-        return [SlotSet("last_mock_question_id", str(selected_question["id"]))] 
+        return [SlotSet("last_mock_question_id", str(selected_question["id"])), SlotSet("mock_interview_answer", None)]
+    
+class ActionCheckMockAnswer(Action):
+
+    def name(self) -> Text:
+        return "action_check_mock_answer"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        user_response = tracker.get_slot("mock_interview_answer")
+
+        questions = get_interview_questions()
+        question_id = int(tracker.get_slot("last_mock_question_id"))
+        selected_question = [question for question in questions if question["id"] == question_id][0]
+        good_keywords = selected_question["good_answer_keywords"].split(", ")
+
+        print(good_keywords)
+        print(user_response)
+        
+        if any(keyword in user_response for keyword in good_keywords):
+            dispatcher.utter_message(text="Great job! You used some of the right keywords in your response.")
+        else:
+            dispatcher.utter_message(text="Hmm, it seems like you missed some of the important keywords in your response. Try again!")
+        
+        return []
+
 
 class ValidateAdditionalQuestionDetailsForm(FormValidationAction):
     def name(self) -> Text:
@@ -117,3 +144,41 @@ class ValidateAdditionalQuestionDetailsForm(FormValidationAction):
             return {"question_detail_number": str(["one", "two", "three", "four", "five"].index(slot_value.lower()) + 1)}
         else:
             return {"question_detail_number": None}
+        
+class ValidateMockInterviewQuestionForm(FormValidationAction):
+    def name(self) -> Text:
+        return "validate_mock_interview_question_form"
+
+    def validate_mock_interview_answer(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        """Validate mock interview answer value."""
+
+        if len(str(slot_value)) > 0:
+            return {"mock_interview_answer": str(slot_value)}
+        else:
+            return {"mock_interview_answer": None}
+        
+class ValidatePredefinedSlots(ValidationAction):
+    def validate_mock_interview_answer(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        """Validate mock_interview_answer value."""
+        
+        active_form = tracker.active_loop.get("name")
+
+        print("validate")
+        print(active_form)
+
+        if active_form == "mock_interview_question_form" and len(str(slot_value)) > 0:
+            return {"mock_interview_answer": str(slot_value)}
+        else:
+            return {"mock_interview_answer": None}

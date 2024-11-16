@@ -20,7 +20,7 @@ rules:
       - action: additional_question_details_form
       - active_loop: additional_question_details_form
 
-  - rule: Submit form
+  - rule: Submit additional question form
     condition:
       - active_loop: additional_question_details_form
     steps:
@@ -29,6 +29,23 @@ rules:
       - slot_was_set:
           - requested_slot: null
       - action: action_expand_on_interview_question
+
+  - rule: Provide mock question and start form when asked
+    steps:
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+
+  - rule: Submit mock question form
+    condition:
+      - active_loop: mock_interview_question_form
+    steps:
+      - action: mock_interview_question_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_check_mock_answer
 
   - rule: Say goodbye anytime the user says goodbye
     steps:

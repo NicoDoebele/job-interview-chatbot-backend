@@ -48,3 +48,11 @@ nlu:
       - Am I speaking to a bot?
       - Am I speaking to a human?
       - Are you a real person?
+
+  - intent: ask_for_mock_interview_question
+    examples: |
+      - Can you ask me a mock interview question?
+      - Can you give me a mock interview question?
+      - Can you provide me with a mock interview question?
+      - Can you ask me a question to practice for an interview?
+      - Can you give me a question to practice for an interview?
