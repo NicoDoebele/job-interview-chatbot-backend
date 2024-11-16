@@ -8,6 +8,7 @@ from rasa_sdk.types import DomainDict
 import random
 import logging
 import requests
+import array
 
 logging.getLogger(__name__)
 
@@ -16,15 +17,13 @@ cached_interview_questions = []
 def get_interview_questions():
     global cached_interview_questions
 
-    # allows access to any public unprotected claims in the supabase "job-chatbot" project
-    public_url: str = "https://jyoivgbjcjpdkivdtlcb.supabase.co"
-    public_key: str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5b2l2Z2JqY2pwZGtpdmR0bGNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzExNDE0MjUsImV4cCI6MjA0NjcxNzQyNX0.U6F_dMw2brDiSeEIn9HvQshLpypr07Z082VpEamRKe0"
-    question_path: str = "/rest/v1/interview_questions"
+    # aws lambda function to public dynamodb table
+    data_url = "https://doitcs0az1.execute-api.eu-central-1.amazonaws.com/default/JCBGetAllQuestions"
 
     if cached_interview_questions:
         return cached_interview_questions
 
-    response = requests.get(public_url + question_path, headers={"apikey": public_key, "Authorization": f"Bearer {public_key}"})
+    response = requests.get(data_url)
     cached_interview_questions = response.json()
     return cached_interview_questions
 
@@ -47,7 +46,7 @@ class ActionProvideInterviewQuestions(Action):
 
         dispatcher.utter_message(text=question_text)
 
-        ids = [question["id"] for question in selected_questions]
+        ids = [question["_id"] for question in selected_questions]
         return [SlotSet("last_provided_question_ids", ids),]
     
 class ActionExpandOnInterviewQuestion(Action):
@@ -64,13 +63,13 @@ class ActionExpandOnInterviewQuestion(Action):
         question_id = question_ids[int(question_number) - 1]
 
         interview_questions = get_interview_questions()
-        selected_question = [question for question in interview_questions if question["id"] == question_id][0]
+        selected_question = [question for question in interview_questions if question["_id"] == question_id][0]
 
         lowercase_first_letter = lambda s: s[:1].lower() + s[1:] if s else ''
         
         question_text = f"Here are some tips on how to answer the question: {selected_question['question']} \n"
         question_text += f"When answering this question {lowercase_first_letter(selected_question['good_answer_tips'])} \n"
-        question_text += f"Try to orientate your answer around keywords like {selected_question['good_answer_keywords']} to make a good impression. \n"
+        question_text += f"Try to orientate your answer around keywords like {', '.join(selected_question['good_answer_keywords'])} to make a good impression. \n"
         question_text += f"This is what a good answer could look like: {selected_question['good_answer_example']} \n"
         question_text += "Would you like detailed information about another question?"
 
@@ -94,7 +93,7 @@ class ActionAskMockInterviewQuestion(Action):
 
         dispatcher.utter_message(text=question_text)
 
-        return [SlotSet("last_mock_question_id", str(selected_question["id"])), SlotSet("mock_interview_answer", None)]
+        return [SlotSet("last_mock_question_id", str(selected_question["_id"])), SlotSet("mock_interview_answer", None)]
     
 class ActionCheckMockAnswer(Action):
 
@@ -108,14 +107,10 @@ class ActionCheckMockAnswer(Action):
         user_response = tracker.get_slot("mock_interview_answer")
 
         questions = get_interview_questions()
-        question_id = int(tracker.get_slot("last_mock_question_id"))
-        selected_question = [question for question in questions if question["id"] == question_id][0]
-        good_keywords = selected_question["good_answer_keywords"].split(", ")
-
-        print(good_keywords)
-        print(user_response)
+        question_id = tracker.get_slot("last_mock_question_id")
+        selected_question = [question for question in questions if question["_id"] == question_id][0]
         
-        if any(keyword in user_response for keyword in good_keywords):
+        if any(keyword in user_response for keyword in selected_question["good_answer_keywords"]):
             dispatcher.utter_message(text="Great job! You used some of the right keywords in your response.")
         else:
             dispatcher.utter_message(text="Hmm, it seems like you missed some of the important keywords in your response. Try again!")
@@ -174,9 +169,6 @@ class ValidatePredefinedSlots(ValidationAction):
         """Validate mock_interview_answer value."""
         
         active_form = tracker.active_loop.get("name")
-
-        print("validate")
-        print(active_form)
 
         if active_form == "mock_interview_question_form" and len(str(slot_value)) > 0:
             return {"mock_interview_answer": str(slot_value)}
