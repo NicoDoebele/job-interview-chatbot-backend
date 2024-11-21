@@ -154,6 +154,13 @@ responses:
   utter_star_method:
     - text: "The STAR method is a structured approach to answering interview questions:\n• Situation: Describe the context of the problem\n• Task: Explain what you did to solve it\n• Action: Describe the actions you took\n• Result: Explain the outcome of your actions"
 
+  # Version 3
+  utter_how_else_can_i_help:
+    - text: "How else can I help you?"
+
+  utter_sorry_i_didnt_understand:
+    - text: "I'm sorry, I didn't understand that. Please try again."
+
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
