@@ -31,3 +31,471 @@ stories:
       - slot_was_set:
           - question_detail_number: "3"
       - action: action_expand_on_interview_question
+
+  # Version 2
+  # Iteration 1
+
+  - story: User asks for interview tips
+    steps:
+      - intent: ask_interview_tips
+      - action: utter_interview_tips
+      - action: utter_how_else_can_i_help
+
+  - story: User asks how to prepare
+    steps:
+      - intent: ask_how_to_prepare
+      - action: utter_how_to_prepare
+      - action: utter_how_else_can_i_help
+
+  - story: User asks about common mistakes
+    steps:
+      - intent: ask_common_mistakes
+      - action: utter_common_mistakes
+      - action: utter_how_else_can_i_help
+
+  - story: User asks what to wear
+    steps:
+      - intent: ask_what_to_wear
+      - action: utter_what_to_wear
+      - action: utter_how_else_can_i_help
+
+  - story: User asks how to answer questions
+    steps:
+      - intent: ask_how_to_answer_questions
+      - action: utter_how_to_answer_questions
+      - action: utter_how_else_can_i_help
+
+  - story: User asks about interview duration
+    steps:
+      - intent: ask_duration_of_interview
+      - action: utter_duration_of_interview
+      - action: utter_how_else_can_i_help
+
+  - story: User asks about follow up
+    steps:
+      - intent: ask_follow_up
+      - action: utter_follow_up
+      - action: utter_how_else_can_i_help
+
+  - story: User asks about virtual interviews
+    steps:
+      - intent: ask_virtual_interview
+      - action: utter_virtual_interview
+      - action: utter_how_else_can_i_help
+
+  - story: User asks about salary discussion
+    steps:
+      - intent: ask_salary_discussion
+      - action: utter_salary_discussion
+      - action: utter_how_else_can_i_help
+
+  - story: User says thank you
+    steps:
+      - intent: thank
+      - action: utter_no_problem
+
+  - story: User asks about bot capabilities
+    steps:
+      - intent: about_bot
+      - action: utter_about_bot
+      - action: utter_how_else_can_i_help
+
+  - story: User asks for help
+    steps:
+      - intent: help
+      - action: utter_help
+
+  - story: User expresses nervousness
+    steps:
+      - intent: nervous_feelings
+      - action: utter_dealing_with_nervous_feeling
+      - action: utter_how_else_can_i_help
+
+  - story: User expresses excitement
+    steps:
+      - intent: excited_feelings
+      - action: utter_excited_feelings
+      - action: utter_how_else_can_i_help
+
+  - story: User needs motivation
+    steps:
+      - intent: need_motivation
+      - action: utter_motivation_help
+      - action: utter_how_else_can_i_help
+
+  - story: User asks for confidence boost
+    steps:
+      - intent: ask_confidence_boost
+      - action: utter_confidence_boost
+      - action: utter_how_else_can_i_help
+
+  - story: User asks about skill presentation
+    steps:
+      - intent: ask_downlpay_or_upplay_skills
+      - action: utter_downlpay_or_upplay_skills
+      - action: utter_how_else_can_i_help
+
+  - story: User asks about STAR method
+    steps:
+      - intent: ask_star_method
+      - action: utter_star_method
+      - action: utter_how_else_can_i_help
+
+  - story: User asks for mock interview review
+    steps:
+      - intent: mock_interview_review
+      - action: utter_mock_interview_review
+
+  # Combined stories with follow-up questions
+  - story: User asks about interview tips then preparation
+    steps:
+      - intent: ask_interview_tips
+      - action: utter_interview_tips
+      - intent: ask_how_to_prepare
+      - action: utter_how_to_prepare
+      - action: utter_how_else_can_i_help
+
+  - story: User asks about STAR method then example
+    steps:
+      - intent: ask_star_method
+      - action: utter_star_method
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+
+  - story: User expresses nervousness then asks for confidence boost
+    steps:
+      - intent: nervous_feelings
+      - action: utter_dealing_with_nervous_feeling
+      - intent: ask_confidence_boost
+      - action: utter_confidence_boost
+      - action: utter_how_else_can_i_help
+
+  - story: Complete interview preparation path
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: ask_how_to_prepare
+      - action: utter_how_to_prepare
+      - intent: ask_what_to_wear
+      - action: utter_what_to_wear
+      - intent: ask_about_interview_questions
+      - action: action_provide_interview_questions
+      - intent: thank
+      - action: utter_no_problem
+      - action: utter_how_else_can_i_help
+
+  - story: Nervous candidate preparation path
+    steps:
+      - intent: nervous_feelings
+      - action: utter_dealing_with_nervous_feeling
+      - intent: ask_confidence_boost
+      - action: utter_confidence_boost
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+      - intent: thank
+      - action: utter_no_problem
+
+  - story: Technical interview preparation
+    steps:
+      - intent: ask_star_method
+      - action: utter_star_method
+      - intent: ask_how_to_answer_questions
+      - action: utter_how_to_answer_questions
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+      - intent: mock_interview_review
+      - action: utter_mock_interview_review
+
+  - story: Virtual interview preparation path
+    steps:
+      - intent: ask_virtual_interview
+      - action: utter_virtual_interview
+      - intent: ask_how_to_answer_questions
+      - action: utter_how_to_answer_questions
+      - intent: ask_duration_of_interview
+      - action: utter_duration_of_interview
+      - intent: ask_common_mistakes
+      - action: utter_common_mistakes
+      - action: utter_how_else_can_i_help
+
+  - story: Salary negotiation preparation
+    steps:
+      - intent: ask_salary_discussion
+      - action: utter_salary_discussion
+      - intent: ask_downlpay_or_upplay_skills
+      - action: utter_downlpay_or_upplay_skills
+      - intent: nervous_feelings
+      - action: utter_dealing_with_nervous_feeling
+      - intent: thank
+      - action: utter_no_problem
+
+  - story: Excited candidate preparation
+    steps:
+      - intent: excited_feelings
+      - action: utter_excited_feelings
+      - intent: ask_how_to_prepare
+      - action: utter_how_to_prepare
+      - intent: ask_about_interview_questions
+      - action: action_provide_interview_questions
+      - intent: affirm
+      - action: additional_question_details_form
+      - active_loop: additional_question_details_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_expand_on_interview_question
+
+  - story: Follow-up guidance path
+    steps:
+      - intent: ask_follow_up
+      - action: utter_follow_up
+      - intent: ask_salary_discussion
+      - action: utter_salary_discussion
+      - intent: ask_common_mistakes
+      - action: utter_common_mistakes
+      - intent: thank
+      - action: utter_no_problem
+
+  - story: Confidence building path
+    steps:
+      - intent: need_motivation
+      - action: utter_motivation_help
+      - intent: ask_confidence_boost
+      - action: utter_confidence_boost
+      - intent: ask_downlpay_or_upplay_skills
+      - action: utter_downlpay_or_upplay_skills
+      - intent: excited_feelings
+      - action: utter_excited_feelings
+      - action: utter_how_else_can_i_help
+
+  - story: Complete mock interview cycle
+    steps:
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+      - intent: mock_interview_review
+      - action: utter_mock_interview_review
+      - intent: ask_star_method
+      - action: utter_star_method
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+
+  - story: Bot exploration and help
+    steps:
+      - intent: bot_challenge
+      - action: utter_bot_challenge
+      - intent: about_bot
+      - action: utter_about_bot
+      - intent: help
+      - action: utter_help
+
+  # Iteration 2
+
+  - story: Detailed STAR method practice path
+    steps:
+      - intent: ask_star_method
+      - action: utter_star_method
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+      - intent: ask_how_to_answer_questions
+      - action: utter_how_to_answer_questions
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+
+  - story: From nervousness to confidence path
+    steps:
+      - intent: nervous_feelings
+      - action: utter_dealing_with_nervous_feeling
+      - intent: need_motivation
+      - action: utter_motivation_help
+      - intent: ask_how_to_prepare
+      - action: utter_how_to_prepare
+      - intent: ask_confidence_boost
+      - action: utter_confidence_boost
+      - intent: thank
+      - action: utter_no_problem
+
+  - story: Virtual interview comprehensive prep
+    steps:
+      - intent: ask_virtual_interview
+      - action: utter_virtual_interview
+      - intent: ask_what_to_wear
+      - action: utter_what_to_wear
+      - intent: ask_how_to_answer_questions
+      - action: utter_how_to_answer_questions
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+
+  - story: Salary and skills discussion path
+    steps:
+      - intent: ask_salary_discussion
+      - action: utter_salary_discussion
+      - intent: ask_downlpay_or_upplay_skills
+      - action: utter_downlpay_or_upplay_skills
+      - intent: ask_how_to_answer_questions
+      - action: utter_how_to_answer_questions
+      - intent: ask_common_mistakes
+      - action: utter_common_mistakes
+
+  - story: Complete preparation cycle
+    steps:
+      - intent: ask_how_to_prepare
+      - action: utter_how_to_prepare
+      - intent: ask_interview_tips
+      - action: utter_interview_tips
+      - intent: ask_what_to_wear
+      - action: utter_what_to_wear
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+      - intent: mock_interview_review
+      - action: utter_mock_interview_review
+
+  - story: From questions to practice path
+    steps:
+      - intent: ask_about_interview_questions
+      - action: action_provide_interview_questions
+      - intent: affirm
+      - action: additional_question_details_form
+      - active_loop: additional_question_details_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_expand_on_interview_question
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+
+  - story: Confidence to practice path
+    steps:
+      - intent: ask_confidence_boost
+      - action: utter_confidence_boost
+      - intent: ask_star_method
+      - action: utter_star_method
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+      - intent: excited_feelings
+      - action: utter_excited_feelings
+
+  - story: Multiple mock interview questions
+    steps:
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+
+  - story: From help to practice
+    steps:
+      - intent: help
+      - action: utter_help
+      - intent: ask_interview_tips
+      - action: utter_interview_tips
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+
+  - story: Comprehensive interview preparation
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: nervous_feelings
+      - action: utter_dealing_with_nervous_feeling
+      - intent: ask_how_to_prepare
+      - action: utter_how_to_prepare
+      - intent: ask_star_method
+      - action: utter_star_method
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+      - intent: ask_follow_up
+      - action: utter_follow_up
+      - intent: thank
+      - action: utter_no_problem
+
+  - story: Question details to confidence
+    steps:
+      - intent: ask_about_interview_questions
+      - action: action_provide_interview_questions
+      - intent: affirm
+      - action: additional_question_details_form
+      - active_loop: additional_question_details_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_expand_on_interview_question
+      - intent: nervous_feelings
+      - action: utter_dealing_with_nervous_feeling
+      - intent: ask_confidence_boost
+      - action: utter_confidence_boost
+
+  - story: From bot info to practice
+    steps:
+      - intent: about_bot
+      - action: utter_about_bot
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+      - intent: mock_interview_review
+      - action: utter_mock_interview_review

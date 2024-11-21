@@ -8,6 +8,25 @@ intents:
   - bot_challenge
   - greet
   - ask_for_mock_interview_question
+  - ask_interview_tips
+  - ask_how_to_prepare
+  - ask_common_mistakes
+  - ask_what_to_wear
+  - ask_how_to_answer_questions
+  - ask_duration_of_interview
+  - ask_follow_up
+  - ask_virtual_interview
+  - ask_salary_discussion
+  - thank
+  - about_bot
+  - help
+  - nervous_feelings
+  - excited_feelings
+  - need_motivation
+  - ask_confidence_boost
+  - ask_downlpay_or_upplay_skills
+  - mock_interview_review
+  - ask_star_method
 
 actions:
   - action_provide_interview_questions
@@ -67,9 +86,73 @@ responses:
 
   utter_bot_challenge:
     - text: "I am a bot."
+      buttons:
+        - title: "Who made you?"
+          payload: "I was created by Nico Doebele."
+        - title: "What were you created in?"
+          payload: "I was created in RASA."
 
   utter_goodbye:
     - text: "Goodbye!"
+
+  # Version 2
+
+  utter_interview_tips:
+    - text: "Here are key interview tips:\n• Research the company thoroughly\n• Practice common questions\n• Prepare STAR method examples\n• Arrive 10-15 minutes early\n• Bring extra copies of your resume\n• Make eye contact and maintain good posture\n• Ask thoughtful questions"
+
+  utter_how_to_prepare:
+    - text: "Here's your interview prep checklist:\n• Research company history, values, and recent news\n• Review the job description thoroughly\n• Practice your elevator pitch\n• Prepare questions for interviewers\n• Plan your outfit and route\n• Get documents ready (resume, portfolio)\n• Get a good night's sleep"
+
+  utter_common_mistakes:
+    - text: "Common interview mistakes to avoid:\n• Being late\n• Not researching the company\n• Speaking negatively about previous employers\n• Being unprepared for basic questions\n• Dressing inappropriately\n• Not asking questions\n• Focusing too much on salary early on"
+
+  utter_what_to_wear:
+    - text: "Professional interview attire tips:\n• Business professional is usually safest\n• Stick to conservative colors (navy, gray, black)\n• Clean, pressed clothes\n• Minimal jewelry/accessories\n• Professional, comfortable shoes\n• Well-groomed appearance\nTip: When in doubt, dress one level up from the company's daily dress code"
+
+  utter_how_to_answer_questions:
+    - text: "Tips for answering interview questions:\n• Use the STAR method for behavioral questions\n• Keep answers focused and concise (1-2 minutes)\n• Back claims with specific examples\n• Show enthusiasm and positive attitude\n• Be honest - don't make up answers\n• If unclear, ask for clarification"
+
+  utter_duration_of_interview:
+    - text: "Typical interview durations:\n• Phone screens: 15-30 minutes\n• Initial interviews: 30-60 minutes\n• Technical interviews: 1-2 hours\n• Panel interviews: 1-2 hours\n• Final rounds: Could be half-day or full-day"
+
+  utter_follow_up:
+    - text: "Follow-up best practices:\n• Send a thank-you email within 24 hours\n• Reference specific conversation points\n• Reaffirm your interest\n• Keep it brief and professional\n• If no response after a week, send one polite follow-up"
+
+  utter_virtual_interview:
+    - text: "Virtual interview tips:\n• Test tech beforehand\n• Ensure good lighting and background\n• Look at camera when speaking\n• Dress professionally (full outfit)\n• Close other programs\n• Use headphones\n• Have backup internet ready"
+
+  utter_salary_discussion:
+    - text: "Salary discussion tips:\n• Let employer bring it up first if possible\n• Know your market value\n• Give a range, not a specific number\n• Consider total compensation package\n• Be prepared to justify your expectations\n• Stay positive and professional"
+
+  utter_no_problem:
+    - text: "You're welcome! Let me know if you need anything else."
+
+  utter_about_bot:
+    - text: "I'm an interview preparation assistant. I can help with:\n• Mock interviews\n• Common interview questions\n• Interview tips and preparation\n• Handling specific situations\n• Building confidence\nJust ask what you'd like help with!"
+
+  utter_help:
+    - text: "I can help with:\n• Practice interview questions\n• Interview preparation tips\n• Common mistakes to avoid\n• Dress code advice\n• Follow-up guidance\n• Confidence building\nWhat would you like to know more about?"
+
+  utter_dealing_with_nervous_feeling:
+    - text: "It's normal to feel nervous! Try these:\n• Practice deep breathing\n• Prepare thoroughly\n• Arrive early to settle in\n• Remember they invited you because they're interested\n• Focus on your achievements\n• View it as a conversation, not an interrogation"
+
+  utter_excited_feelings:
+    - text: "That's great! Channel that excitement into:\n• Extra preparation\n• Researching the company thoroughly\n• Preparing thoughtful questions\n• Getting a good night's rest\nYour enthusiasm will show positively in the interview!"
+
+  utter_motivation_help:
+    - text: "You've got this! Remember:\n• You were selected from many applicants\n• Your experience and skills are valuable\n• Every interview is a learning opportunity\n• You miss 100% of the shots you don't take\n• Preparation builds confidence"
+
+  utter_confidence_boost:
+    - text: "Build your confidence by:\n• Practicing responses out loud\n• Preparing specific examples of achievements\n• Wearing clothes that make you feel good\n• Using power poses before the interview\n• Focusing on past successes\n• Remembering they need you as much as you need them"
+
+  utter_downlpay_or_upplay_skills:
+    - text: "Present your skills honestly by:\n• Using specific examples to demonstrate abilities\n• Staying factual about achievements\n• Acknowledging areas for growth\n• Showing enthusiasm to learn\n• Focusing on relevant experience\nBe confident but humble - no need to downplay or oversell"
+
+  utter_mock_interview_review:
+    - text: "Let's review your response:\n• Content relevance\n• Structure (STAR method if applicable)\n• Clarity and conciseness\n• Specific examples used\n• Areas for improvement\nWould you like to try another question?"
+
+  utter_star_method:
+    - text: "The STAR method is a structured approach to answering interview questions:\n• Situation: Describe the context of the problem\n• Task: Explain what you did to solve it\n• Action: Describe the actions you took\n• Result: Explain the outcome of your actions"
 
 session_config:
   session_expiration_time: 60

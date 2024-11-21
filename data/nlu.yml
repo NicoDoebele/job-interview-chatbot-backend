@@ -56,3 +56,155 @@ nlu:
       - Can you provide me with a mock interview question?
       - Can you ask me a question to practice for an interview?
       - Can you give me a question to practice for an interview?
+
+  # Version 2
+
+  - intent: ask_interview_tips
+    examples: |
+      - What are some good interview tips?
+      - How can I do better in interviews?
+      - Give me some interview advice
+      - What are the best practices for interviews?
+      - How can I improve my interview performance?
+
+  - intent: ask_how_to_prepare
+    examples: |
+      - How should I prepare for an interview?
+      - What should I do before an interview?
+      - How do I get ready for my interview?
+      - What preparation is needed for interviews?
+      - Best ways to prepare for an interview?
+
+  - intent: ask_common_mistakes
+    examples: |
+      - What mistakes should I avoid in interviews?
+      - What are common interview mistakes?
+      - Tell me about interview mistakes to avoid
+      - What shouldn't I do in an interview?
+      - Common errors people make in interviews?
+
+  - intent: ask_what_to_wear
+    examples: |
+      - What should I wear to an interview?
+      - What's appropriate interview attire?
+      - How should I dress for my interview?
+      - What clothes are good for interviews?
+      - Interview dress code advice?
+
+  - intent: ask_how_to_answer_questions
+    examples: |
+      - How should I answer interview questions?
+      - What's the best way to respond in interviews?
+      - Tips for answering interview questions?
+      - How do I structure my interview answers?
+      - Best practices for responding to interviewers?
+
+  - intent: ask_duration_of_interview
+    examples: |
+      - How long do interviews usually last?
+      - What's the typical interview duration?
+      - How much time should I expect for the interview?
+      - How long will my interview take?
+      - Average length of interviews?
+
+  - intent: ask_follow_up
+    examples: |
+      - When should I follow up after an interview?
+      - How do I follow up post-interview?
+      - What's the best way to follow up?
+      - Should I send a thank you email?
+      - Follow up etiquette after interviews?
+
+  - intent: ask_virtual_interview
+    examples: |
+      - How do I prepare for a virtual interview?
+      - Tips for online interviews?
+      - What's different about virtual interviews?
+      - How to succeed in remote interviews?
+      - Best practices for video interviews?
+
+  - intent: ask_salary_discussion
+    examples: |
+      - How do I discuss salary in an interview?
+      - When should I bring up compensation?
+      - Tips for salary negotiation?
+      - How to handle salary questions?
+      - Best way to talk about pay?
+
+  - intent: thank
+    examples: |
+      - Thank you
+      - Thanks
+      - Thanks a lot
+      - I appreciate it
+      - That's helpful
+
+  - intent: about_bot
+    examples: |
+      - What can you do?
+      - What are your features?
+      - How can you help me?
+      - Tell me about yourself
+      - What's your purpose?
+
+  - intent: help
+    examples: |
+      - I need help
+      - Can you help me?
+      - What kind of help do you offer?
+      - I'm stuck
+      - Help me please
+
+  - intent: nervous_feelings
+    examples: |
+      - I'm feeling nervous about the interview
+      - I have interview anxiety
+      - The interview is making me anxious
+      - I'm stressed about interviewing
+      - Interview nerves are getting to me
+
+  - intent: excited_feelings
+    examples: |
+      - I'm excited about the interview
+      - Looking forward to interviewing
+      - Can't wait for my interview
+      - Feeling positive about the interview
+      - Really excited about this opportunity
+
+  - intent: need_motivation
+    examples: |
+      - I need some motivation
+      - Help me stay positive
+      - Give me some encouragement
+      - I need a pep talk
+      - Help me stay motivated
+
+  - intent: ask_confidence_boost
+    examples: |
+      - How can I be more confident?
+      - Help me feel more confident
+      - Tips for interview confidence
+      - How to boost my confidence?
+      - Ways to appear more confident
+
+  - intent: ask_downlpay_or_upplay_skills
+    examples: |
+      - Should I downplay my skills?
+      - How much should I highlight my abilities?
+      - Am I overselling myself?
+      - Should I be modest about my skills?
+      - How to present my experience accurately?
+
+  - intent: mock_interview_review
+    examples: |
+      - How did I do?
+      - Review my mock interview
+      - Give me feedback on my answers
+      - How was my performance?
+      - What could I improve?
+
+  - intent: ask_star_method
+    examples: |
+      - What is the STAR method?
+      - How do I use the STAR method?
+      - Explain the STAR method
