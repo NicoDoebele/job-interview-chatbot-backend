@@ -61,3 +61,8 @@ rules:
     steps:
       - intent: bot_challenge
       - action: utter_bot_challenge
+
+  - rule: Respond to fallback with sorry i didnt understand
+    steps:
+      - intent: nlu_fallback
+      - action: utter_sorry_i_didnt_understand
