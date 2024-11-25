@@ -549,3 +549,35 @@ stories:
       - active_loop: mock_interview_question_form
       - active_loop: null
       - action: action_check_mock_answer
+
+  # Version 6
+
+  - story: Complete mock interview practice with review
+    steps:
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+      - intent: another_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+      - intent: mock_interview_review
+      - action: action_mock_interview_review
+      - intent: ask_star_method
+      - action: utter_star_method
+
+  - story: Review performance after practice
+    steps:
+      - intent: mock_interview_review
+      - action: action_mock_interview_review
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer

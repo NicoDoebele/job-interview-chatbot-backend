@@ -192,7 +192,6 @@ class ActionAskMockInterviewQuestion(Action):
         return [SlotSet("last_mock_question_id", str(selected_question["_id"])), SlotSet("mock_interview_answer", None)]
     
 class ActionCheckMockAnswer(Action):
-
     def name(self) -> Text:
         return "action_check_mock_answer"
 
@@ -201,17 +200,53 @@ class ActionCheckMockAnswer(Action):
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         
         user_response = tracker.get_slot("mock_interview_answer")
+        total_questions = tracker.get_slot("total_mock_questions") or 0
+        successful_questions = tracker.get_slot("successful_mock_questions") or 0
 
         questions = get_interview_questions()
         question_id = tracker.get_slot("last_mock_question_id")
         selected_question = [question for question in questions if question["_id"] == question_id][0]
         
-        if any(keyword in user_response for keyword in selected_question["good_answer_keywords"]):
-            dispatcher.utter_message(text="Great job! You used some of the right keywords in your response.")
-        else:
-            dispatcher.utter_message(text="Hmm, it seems like you missed some of the important keywords in your response. Try again!")
+        # Check if answer contains keywords
+        answer_successful = any(keyword.lower() in user_response.lower() 
+                              for keyword in selected_question["good_answer_keywords"])
         
-        return []
+        # Update counters
+        total_questions += 1
+        if answer_successful:
+            successful_questions += 1
+        
+        # Calculate success ratio
+        success_ratio = successful_questions / total_questions if total_questions > 0 else 0
+        
+        # Provide appropriate feedback based on ratio
+        if answer_successful:
+            if success_ratio > 0.8:
+                feedback = "Excellent job! You're consistently giving strong answers. "
+            elif success_ratio > 0.6:
+                feedback = "Good work! You're showing solid improvement. "
+            else:
+                feedback = "Well done! Keep practicing to improve further. "
+            feedback += "You used some of the key points we were looking for."
+        else:
+            if success_ratio < 0.3:
+                feedback = "Don't worry, interview questions take practice. Try to include keywords like: "
+            elif success_ratio < 0.5:
+                feedback = "You're making progress, but this answer could be stronger. Consider including: "
+            else:
+                feedback = "This answer could be improved by including keywords like: "
+            feedback += ", ".join(selected_question["good_answer_keywords"])
+
+        # Add performance stats if more than 3 questions attempted
+        if total_questions >= 3:
+            feedback += f"\nYour overall performance: {successful_questions}/{total_questions} questions answered effectively."
+        
+        dispatcher.utter_message(text=feedback)
+        
+        return [
+            SlotSet("total_mock_questions", total_questions),
+            SlotSet("successful_mock_questions", successful_questions)
+        ]
 
 
 class ValidateAdditionalQuestionDetailsForm(FormValidationAction):
@@ -371,4 +406,59 @@ class ActionProvideCodingQuestion(Action):
             question_text += "\nThis question has an official solution available."
 
         dispatcher.utter_message(text=question_text)
+        return []
+
+class ActionMockInterviewReview(Action):
+    def name(self) -> Text:
+        return "action_mock_interview_review"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        total_questions = tracker.get_slot("total_mock_questions") or 0
+        successful_questions = tracker.get_slot("successful_mock_questions") or 0
+        
+        if total_questions == 0:
+            dispatcher.utter_message(text="You haven't attempted any mock interview questions yet. Would you like to try one?")
+            return []
+            
+        success_ratio = successful_questions / total_questions
+        
+        # Build detailed feedback
+        review_text = f"Here's your mock interview performance review:\n\n"
+        review_text += f"Questions attempted: {total_questions}\n"
+        review_text += f"Successfully answered: {successful_questions}\n"
+        review_text += f"Success rate: {success_ratio:.0%}\n\n"
+        
+        # Provide adaptive feedback based on performance
+        if success_ratio > 0.8:
+            review_text += "Outstanding performance! Your answers consistently demonstrate:\n"
+            review_text += "• Strong use of relevant keywords\n"
+            review_text += "• Clear structure and examples\n"
+            review_text += "• Professional communication\n\n"
+            review_text += "You're well-prepared for real interviews. Consider practicing more complex scenarios or industry-specific questions."
+        
+        elif success_ratio > 0.6:
+            review_text += "Good progress! Your answers show:\n"
+            review_text += "• Understanding of key concepts\n"
+            review_text += "• Growing confidence\n"
+            review_text += "• Room for more specific examples\n\n"
+            review_text += "To improve further, try incorporating more STAR method examples and industry-specific terminology."
+        
+        elif success_ratio > 0.4:
+            review_text += "You're on the right track. Areas to focus on:\n"
+            review_text += "• Including more relevant keywords\n"
+            review_text += "• Structuring answers using the STAR method\n"
+            review_text += "• Providing specific examples\n\n"
+            review_text += "Would you like to learn more about the STAR method or practice with more questions?"
+        
+        else:
+            review_text += "Keep practicing! Here's what can help:\n"
+            review_text += "• Review common interview questions\n"
+            review_text += "• Practice using the STAR method\n"
+            review_text += "• Focus on including relevant keywords\n\n"
+            review_text += "Would you like some interview tips or to try another practice question?"
+
+        dispatcher.utter_message(text=review_text)
         return []
