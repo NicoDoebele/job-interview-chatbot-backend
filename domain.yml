@@ -29,6 +29,7 @@ intents:
   - ask_star_method
   - ask_more_info
   - another_question
+  - ask_for_coding_question
 
 actions:
   - action_provide_interview_questions
@@ -38,6 +39,7 @@ actions:
   - action_check_mock_answer
   - action_validate_slot_mappings
   - action_handle_more_info
+  - action_provide_coding_question
 
 forms:
   additional_question_details_form:

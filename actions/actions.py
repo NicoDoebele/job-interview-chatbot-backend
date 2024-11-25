@@ -27,6 +27,84 @@ def get_interview_questions():
     cached_interview_questions = response.json()
     return cached_interview_questions
 
+def get_random_coding_problem():
+    """
+    Fetch a random coding problem from LeetCode.
+    :return: Dictionary containing problem details or None if fetch fails
+    """
+    url = 'https://leetcode.com/graphql'
+    
+    query = '''
+    query problemsetQuestionList($categorySlug: String, $limit: Int, $skip: Int, $filters: QuestionListFilterInput) {
+        problemsetQuestionList: questionList(
+            categorySlug: $categorySlug
+            limit: $limit
+            skip: $skip
+            filters: $filters
+        ) {
+            total: totalNum
+            questions: data {
+            acRate
+            difficulty
+            freqBar
+            frontendQuestionId: questionFrontendId
+            isFavor
+            paidOnly: isPaidOnly
+            status
+            title
+            titleSlug
+            topicTags {
+                name
+                id
+                slug
+            }
+            hasSolution
+            hasVideoSolution
+            }
+        }
+    }
+    '''
+    
+    variables = {
+        'categorySlug': '',
+        'limit': 100,
+        'skip': 0,
+        'filters': {}
+    }
+    
+    try:
+        headers = {
+            'Content-Type': 'application/json',
+        }
+        
+        response = requests.post(url, 
+                                 json={'query': query, 'variables': variables},
+                                 headers=headers)
+        
+        response.raise_for_status()
+        
+        data = response.json()
+        questions = data.get('data', {}).get('problemsetQuestionList', {}).get('questions', [])
+        
+        if questions:
+            problem = random.choice(questions)
+            return {
+                'id': problem['frontendQuestionId'],
+                'title': problem['title'],
+                'link': f'https://leetcode.com/problems/{problem["titleSlug"]}/',
+                'difficulty': problem['difficulty']
+            }
+        else:
+            print("No questions found for the specified category.")
+            return None
+    
+    except requests.RequestException as e:
+        print(f"Error fetching problems: {e}")
+        return None
+    except KeyError as e:
+        print(f"Unexpected response format: {e}")
+        return None
+
 class ActionProvideInterviewQuestions(Action):
     def name(self) -> Text:
         return "action_provide_interview_questions"
@@ -209,4 +287,32 @@ class ActionHandleMoreInfo(Action):
         else:
             dispatcher.utter_message(response="utter_no_additional_info")
             
+        return []
+
+class ActionProvideCodingQuestion(Action):
+    def name(self) -> Text:
+        return "action_provide_coding_question"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        try:
+            coding_question = get_random_coding_problem()
+        except Exception as e:
+            dispatcher.utter_message(text="I'm sorry, I couldn't fetch a coding question at the moment. Please try again later.")
+            return []
+        
+        if coding_question is None:
+            dispatcher.utter_message(text="I'm sorry, I couldn't fetch a coding question at the moment. Please try again later.")
+            return []
+
+        question_text = f"Here is a coding question to practice: \n"
+        question_text += f"{coding_question['title']} \n"
+        question_text += f"Difficulty: {coding_question['difficulty']} \n"
+        question_text += f"Question ID: {coding_question['id']} \n"
+        question_text += f"You can find the question on LeetCode: {coding_question['link']} \n"
+        question_text += "Would you like more information on this question?"
+
+        dispatcher.utter_message(text=question_text)
         return []

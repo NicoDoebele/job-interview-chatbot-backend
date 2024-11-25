@@ -231,3 +231,12 @@ nlu:
       - Give me another question
       - Ask me another question
       - Can you ask me another question?
+
+  # Version 5
+
+  - intent: ask_for_coding_question
+    examples: |
+      - Can you give me a coding question?
+      - Can you provide me with a coding question?
+      - Can you ask me a coding question?
+      - What are some coding questions I can practice?

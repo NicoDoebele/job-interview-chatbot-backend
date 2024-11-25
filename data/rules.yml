@@ -73,3 +73,10 @@ rules:
     steps:
       - intent: ask_more_info
       - action: action_handle_more_info
+
+  # Version 5
+
+  - rule: Provide coding question when asked
+    steps:
+      - intent: ask_for_coding_question
+      - action: action_provide_coding_question
