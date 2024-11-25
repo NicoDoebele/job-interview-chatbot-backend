@@ -174,3 +174,39 @@ class ValidatePredefinedSlots(ValidationAction):
             return {"mock_interview_answer": str(slot_value)}
         else:
             return {"mock_interview_answer": None}
+
+class ActionHandleMoreInfo(Action):
+    def name(self) -> Text:
+        return "action_handle_more_info"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        # Get the last intent before more_info request
+        previous_intents = [event.get("parse_data", {}).get("intent", {}).get("name") for event in tracker.events if event.get("event") == "user"]
+        if len(previous_intents) < 2:
+            dispatcher.utter_message(response="utter_no_additional_info")
+            return []
+
+        last_intent = previous_intents[-2]  # -1 would be ask_more_info
+        
+        # Map intents to their expanded information
+        more_info_responses = {
+            "ask_star_method": "The STAR method can be broken down further:\n• Situation: Set the scene and context\n• Task: Describe the challenge and expectations\n• Action: Explain what you did and how\n• Result: Share the outcomes and what you learned\n\nExample:\nSituation: Customer complained about a faulty product\nTask: Needed to resolve issue and retain customer\nAction: Investigated problem, offered replacement, added bonus gift\nResult: Customer became a loyal advocate, shared positive review",
+            
+            "ask_salary_discussion": "Additional salary negotiation strategies:\n• Research industry standards on sites like Glassdoor\n• Consider the full package (benefits, bonuses, etc.)\n• Practice negotiation scenarios beforehand\n• Have a clear minimum acceptable offer\n• Be prepared to discuss performance metrics\n• Consider future growth opportunities",
+            
+            "ask_virtual_interview": "More virtual interview tips:\n• Have a backup device ready\n• Test your internet speed beforehand\n• Use ethernet instead of WiFi if possible\n• Practice looking at camera while speaking\n• Record yourself to check body language\n• Keep notes nearby but don't read from them\n• Have water and materials ready",
+            
+            "ask_what_to_wear": "Additional dress code considerations:\n• Check company social media for dress culture\n• Ensure clothes are pressed night before\n• Bring backup clothing items for emergencies\n• Consider the industry standards\n• Test your outfit by sitting/moving around\n• Choose comfortable but professional shoes",
+            
+            "ask_how_to_prepare": "Additional preparation tips:\n• Create an interview story bank\n• Research your interviewers on LinkedIn\n• Practice with industry-specific terminology\n• Prepare questions about company culture\n• Review company's competitors\n• Check recent company news and developments",
+        }
+        
+        if last_intent in more_info_responses:
+            dispatcher.utter_message(text=more_info_responses[last_intent])
+        else:
+            dispatcher.utter_message(response="utter_no_additional_info")
+            
+        return []

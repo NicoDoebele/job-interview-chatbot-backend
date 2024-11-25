@@ -27,6 +27,8 @@ intents:
   - ask_downlpay_or_upplay_skills
   - mock_interview_review
   - ask_star_method
+  - ask_more_info
+  - another_question
 
 actions:
   - action_provide_interview_questions
@@ -35,6 +37,7 @@ actions:
   - action_ask_mock_interview_question
   - action_check_mock_answer
   - action_validate_slot_mappings
+  - action_handle_more_info
 
 forms:
   additional_question_details_form:
@@ -72,7 +75,7 @@ slots:
             requested_slot: mock_interview_answer
 
 responses:
-  uttter_how_else_can_i_help:
+  utter_how_else_can_i_help:
     - text: "How else can I help you?"
 
   utter_greet:
@@ -155,11 +158,16 @@ responses:
     - text: "The STAR method is a structured approach to answering interview questions:\n• Situation: Describe the context of the problem\n• Task: Explain what you did to solve it\n• Action: Describe the actions you took\n• Result: Explain the outcome of your actions"
 
   # Version 3
-  utter_how_else_can_i_help:
-    - text: "How else can I help you?"
 
   utter_sorry_i_didnt_understand:
     - text: "I'm sorry, I didn't understand that. Please try again."
+
+  # Version 4
+
+  utter_no_additional_info:
+    - text: "Sorry, I don't have any additional information about that topic."
+    - text: "I've shared all the information I have on this topic."
+    - text: "I can't provide more details about that, but feel free to ask about something else!"
 
 session_config:
   session_expiration_time: 60

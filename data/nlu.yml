@@ -208,3 +208,26 @@ nlu:
       - What is the STAR method?
       - How do I use the STAR method?
       - Explain the STAR method
+
+  # Version 4
+
+  - intent: ask_more_info
+    examples: |
+      - Can you tell me more about that?
+      - I'd like more information
+      - More details please
+      - Tell me more
+      - Can you elaborate?
+      - What else can you tell me?
+      - Additional information please
+      - I want to know more
+      - Give me more details
+      - Please explain further
+
+  - intent: another_question
+    examples: |
+      - Can you ask me another question?
+      - Ask me another question
+      - Give me another question
+      - Ask me another question
+      - Can you ask me another question?

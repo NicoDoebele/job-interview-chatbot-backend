@@ -39,6 +39,9 @@ stories:
     steps:
       - intent: ask_interview_tips
       - action: utter_interview_tips
+      - action: action_listen
+      - intent: ask_how_to_prepare
+      - action: utter_how_to_prepare
       - action: utter_how_else_can_i_help
 
   - story: User asks how to prepare
@@ -75,19 +78,19 @@ stories:
     steps:
       - intent: ask_follow_up
       - action: utter_follow_up
-      - action: utter_how_else_can_i_help
+      - action: action_listen
 
   - story: User asks about virtual interviews
     steps:
       - intent: ask_virtual_interview
       - action: utter_virtual_interview
-      - action: utter_how_else_can_i_help
+      - action: action_listen
 
   - story: User asks about salary discussion
     steps:
       - intent: ask_salary_discussion
       - action: utter_salary_discussion
-      - action: utter_how_else_can_i_help
+      - action: action_listen
 
   - story: User says thank you
     steps:
@@ -98,7 +101,7 @@ stories:
     steps:
       - intent: about_bot
       - action: utter_about_bot
-      - action: utter_how_else_can_i_help
+      - action: action_listen
 
   - story: User asks for help
     steps:
@@ -109,25 +112,25 @@ stories:
     steps:
       - intent: nervous_feelings
       - action: utter_dealing_with_nervous_feeling
-      - action: utter_how_else_can_i_help
+      - action: action_listen
 
   - story: User expresses excitement
     steps:
       - intent: excited_feelings
       - action: utter_excited_feelings
-      - action: utter_how_else_can_i_help
+      - action: action_listen
 
   - story: User needs motivation
     steps:
       - intent: need_motivation
       - action: utter_motivation_help
-      - action: utter_how_else_can_i_help
+      - action: action_listen
 
   - story: User asks for confidence boost
     steps:
       - intent: ask_confidence_boost
       - action: utter_confidence_boost
-      - action: utter_how_else_can_i_help
+      - action: action_listen
 
   - story: User asks about skill presentation
     steps:
@@ -139,7 +142,7 @@ stories:
     steps:
       - intent: ask_star_method
       - action: utter_star_method
-      - action: utter_how_else_can_i_help
+      - action: action_listen
 
   - story: User asks for mock interview review
     steps:
@@ -163,6 +166,16 @@ stories:
       - action: action_ask_mock_interview_question
       - action: mock_interview_question_form
       - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+      - intent: ask_how_to_answer_questions
+      - action: utter_how_to_answer_questions
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
 
   - story: User expresses nervousness then asks for confidence boost
     steps:
@@ -220,6 +233,7 @@ stories:
     steps:
       - intent: ask_virtual_interview
       - action: utter_virtual_interview
+      - action: action_listen
       - intent: ask_how_to_answer_questions
       - action: utter_how_to_answer_questions
       - intent: ask_duration_of_interview
@@ -499,3 +513,39 @@ stories:
       - action: action_check_mock_answer
       - intent: mock_interview_review
       - action: utter_mock_interview_review
+
+  # Version 4
+
+  - story: Mock interview form questions
+    steps:
+      - intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+
+  - story: Additional question details form
+    steps:
+      - intent: ask_about_interview_questions
+      - action: action_provide_interview_questions
+      - intent: affirm
+      - action: additional_question_details_form
+      - active_loop: additional_question_details_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_expand_on_interview_question
+
+  - story: User asks for another question
+    steps:
+      - intent: another_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer
+      - intent: another_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - active_loop: mock_interview_question_form
+      - active_loop: null
+      - action: action_check_mock_answer

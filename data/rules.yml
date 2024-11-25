@@ -66,3 +66,10 @@ rules:
     steps:
       - intent: nlu_fallback
       - action: utter_sorry_i_didnt_understand
+
+  # Version 4
+
+  - rule: Handle more info requests
+    steps:
+      - intent: ask_more_info
+      - action: action_handle_more_info
