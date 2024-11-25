@@ -27,9 +27,13 @@ def get_interview_questions():
     cached_interview_questions = response.json()
     return cached_interview_questions
 
-def get_random_coding_problem():
+def get_random_coding_problem(difficulty: str = None, category: str = None, topic: str = None, include_paid: bool = False):
     """
     Fetch a random coding problem from LeetCode.
+    :param difficulty: Optional filter for problem difficulty ('Easy', 'Medium', 'Hard')
+    :param category: Optional filter for problem category ('algorithms', 'database', 'shell')
+    :param topic: Optional filter for problem topic ('array', 'string', 'dynamic-programming', etc.)
+    :param include_paid: Whether to include premium problems
     :return: Dictionary containing problem details or None if fetch fails
     """
     url = 'https://leetcode.com/graphql'
@@ -66,10 +70,13 @@ def get_random_coding_problem():
     '''
     
     variables = {
-        'categorySlug': '',
+        'categorySlug': category.lower() if category else '',
         'limit': 100,
         'skip': 0,
-        'filters': {}
+        'filters': {
+            'difficulty': difficulty.upper() if difficulty else None,
+            'tags': [topic.lower()] if topic else None
+        }
     }
     
     try:
@@ -78,24 +85,35 @@ def get_random_coding_problem():
         }
         
         response = requests.post(url, 
-                                 json={'query': query, 'variables': variables},
-                                 headers=headers)
+                               json={'query': query, 'variables': variables},
+                               headers=headers)
         
         response.raise_for_status()
         
         data = response.json()
         questions = data.get('data', {}).get('problemsetQuestionList', {}).get('questions', [])
         
-        if questions:
-            problem = random.choice(questions)
+        # Filter questions based on parameters
+        filtered_questions = questions
+        if not include_paid:
+            filtered_questions = [q for q in filtered_questions if not q['paidOnly']]
+        if topic:
+            filtered_questions = [q for q in filtered_questions 
+                                if any(tag['slug'] == topic.lower() for tag in q['topicTags'])]
+        
+        if filtered_questions:
+            problem = random.choice(filtered_questions)
             return {
                 'id': problem['frontendQuestionId'],
                 'title': problem['title'],
                 'link': f'https://leetcode.com/problems/{problem["titleSlug"]}/',
-                'difficulty': problem['difficulty']
+                'difficulty': problem['difficulty'],
+                'topics': [tag['name'] for tag in problem['topicTags']],
+                'has_solution': problem['hasSolution'],
+                'acceptance_rate': f"{problem['acRate']:.1f}%"
             }
         else:
-            print("No questions found for the specified category.")
+            print(f"No questions found matching the criteria: difficulty={difficulty}, category={category}, topic={topic}")
             return None
     
     except requests.RequestException as e:
@@ -296,23 +314,37 @@ class ActionProvideCodingQuestion(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        # TODO: Hardcoded right now, should be gotten through entities later
+        difficulty = 'hard'
+        topic = 'sorting'
+        category = 'algorithms'
+        include_paid = False
         
         try:
-            coding_question = get_random_coding_problem()
+            coding_question = get_random_coding_problem(
+                difficulty=difficulty,
+                category=category,
+                topic=topic,
+                include_paid=include_paid
+            )
         except Exception as e:
             dispatcher.utter_message(text="I'm sorry, I couldn't fetch a coding question at the moment. Please try again later.")
             return []
         
         if coding_question is None:
-            dispatcher.utter_message(text="I'm sorry, I couldn't fetch a coding question at the moment. Please try again later.")
+            dispatcher.utter_message(text="I'm sorry, I couldn't find any questions matching your criteria. Try different filters.")
             return []
 
         question_text = f"Here is a coding question to practice: \n"
-        question_text += f"{coding_question['title']} \n"
+        question_text += f"Title: {coding_question['title']} \n"
         question_text += f"Difficulty: {coding_question['difficulty']} \n"
+        question_text += f"Topics: {', '.join(coding_question['topics'])} \n"
+        question_text += f"Acceptance Rate: {coding_question['acceptance_rate']} \n"
         question_text += f"Question ID: {coding_question['id']} \n"
-        question_text += f"You can find the question on LeetCode: {coding_question['link']} \n"
-        question_text += "Would you like more information on this question?"
+        question_text += f"You can find the question on LeetCode: {coding_question['link']}"
+        if coding_question['has_solution']:
+            question_text += "\nThis question has an official solution available."
 
         dispatcher.utter_message(text=question_text)
         return []
