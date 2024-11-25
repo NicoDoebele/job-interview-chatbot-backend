@@ -48,22 +48,22 @@ def get_random_coding_problem(difficulty: str = None, category: str = None, topi
         ) {
             total: totalNum
             questions: data {
-            acRate
-            difficulty
-            freqBar
-            frontendQuestionId: questionFrontendId
-            isFavor
-            paidOnly: isPaidOnly
-            status
-            title
-            titleSlug
-            topicTags {
-                name
-                id
-                slug
-            }
-            hasSolution
-            hasVideoSolution
+                acRate
+                difficulty
+                freqBar
+                frontendQuestionId: questionFrontendId
+                isFavor
+                paidOnly: isPaidOnly
+                status
+                title
+                titleSlug
+                topicTags {
+                    name
+                    id
+                    slug
+                }
+                hasSolution
+                hasVideoSolution
             }
         }
     }
@@ -311,14 +311,38 @@ class ActionProvideCodingQuestion(Action):
     def name(self) -> Text:
         return "action_provide_coding_question"
 
+    def extract_entities(self, tracker: Tracker) -> Dict[str, str]:
+        """Extract entities from the message"""
+        entities = {
+            'difficulty': None,
+            'topic': None,
+            'category': None
+        }
+        
+        # Get entities from the latest message
+        message_entities = tracker.latest_message.get('entities', [])
+        
+        for entity in message_entities:
+            if entity['entity'] == 'difficulty':
+                entities['difficulty'] = entity['value']
+            elif entity['entity'] == 'topic':
+                entities['topic'] = entity['value']
+            elif entity['entity'] == 'category':
+                entities['category'] = entity['value']
+        
+        return entities
+
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-
-        # TODO: Hardcoded right now, should be gotten through entities later
-        difficulty = 'hard'
-        topic = 'sorting'
-        category = 'algorithms'
+        
+        # Extract entities
+        entities = self.extract_entities(tracker)
+        
+        # Use defaults if entities not found
+        difficulty = entities['difficulty'] or None
+        topic = entities['topic'] or None
+        category = entities['category'] or 'algorithms'
         include_paid = False
         
         try:

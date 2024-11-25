@@ -31,6 +31,11 @@ intents:
   - another_question
   - ask_for_coding_question
 
+entities:
+  - difficulty
+  - topic
+  - category
+
 actions:
   - action_provide_interview_questions
   - validate_additional_question_details_form

@@ -24,6 +24,8 @@ nlu:
       - Can you give me some interview questions?
       - What are some questions I might be asked in an interview?
       - Can you provide me with some questions I might be asked in an interview?
+      - Interview questions
+      - More interview questions
 
   - intent: greet
     examples: |
@@ -51,6 +53,8 @@ nlu:
 
   - intent: ask_for_mock_interview_question
     examples: |
+      - Mock question
+      - Mock interview question
       - Can you ask me a mock interview question?
       - Can you give me a mock interview question?
       - Can you provide me with a mock interview question?
@@ -236,7 +240,19 @@ nlu:
 
   - intent: ask_for_coding_question
     examples: |
-      - Can you give me a coding question?
-      - Can you provide me with a coding question?
-      - Can you ask me a coding question?
-      - What are some coding questions I can practice?
+      - Coding questions
+      - Can you give me a [hard](difficulty) coding question?
+      - Can you provide me with a [medium](difficulty) [tree](topic) question?
+      - Can you ask me an [easy](difficulty) [array](topic) question?
+      - What are some [database](category) questions I can practice?
+      - Give me a [hard](difficulty) [dynamic-programming](topic) problem
+      - Show me an [easy](difficulty) [algorithms](category) question
+      - I want to practice [medium](difficulty) [sorting](topic) problems
+      - Give me a [shell](category) question
+      - Show me [hard](difficulty) [linked-list](topic) problems
+      - I need an [easy](difficulty) [string](topic) question
+      - Can you give me a [medium](difficulty) [math](topic) problem?
+      - Show me some [hard](difficulty) [greedy](topic) questions
+      - I want to solve a [database](category) problem
+      - Give me an [algorithms](category) question about [trees](topic)
+      - Show me a [medium](difficulty) [binary-search](topic) problem
