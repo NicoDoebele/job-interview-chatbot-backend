@@ -30,6 +30,8 @@ intents:
   - ask_more_info
   - another_question
   - ask_for_coding_question
+  - ask_how_to_prepare_coding
+  - ask_how_to_behave
 
 entities:
   - difficulty
@@ -164,11 +166,16 @@ responses:
   utter_downlpay_or_upplay_skills:
     - text: "Present your skills honestly by:\n• Using specific examples to demonstrate abilities\n• Staying factual about achievements\n• Acknowledging areas for growth\n• Showing enthusiasm to learn\n• Focusing on relevant experience\nBe confident but humble - no need to downplay or oversell"
 
-  utter_mock_interview_review:
-    - text: "Let's review your response:\n• Content relevance\n• Structure (STAR method if applicable)\n• Clarity and conciseness\n• Specific examples used\n• Areas for improvement\nWould you like to try another question?"
-
   utter_star_method:
     - text: "The STAR method is a structured approach to answering interview questions:\n• Situation: Describe the context of the problem\n• Task: Explain what you did to solve it\n• Action: Describe the actions you took\n• Result: Explain the outcome of your actions"
+
+  # Version 6
+
+  utter_how_to_prepare_coding:
+    - text: "Coding interview preparation tips:\n• Practice coding problems daily\n• Review data structures and algorithms\n• Work on time complexity and space complexity\n• Practice coding on a whiteboard\n• Do mock interviews with peers\n• Review your past projects"
+
+  utter_how_to_behave:
+    - text: "How to present yourself in interviews:\n• Be polite and professional\n• Make eye contact and smile\n• Use a firm handshake\n• Listen actively\n• Ask thoughtful questions\n• Show enthusiasm and interest\n• Thank the interviewers afterwards"
 
   # Version 3
 

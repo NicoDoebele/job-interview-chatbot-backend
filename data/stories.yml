@@ -147,7 +147,7 @@ stories:
   - story: User asks for mock interview review
     steps:
       - intent: mock_interview_review
-      - action: utter_mock_interview_review
+      - action: action_mock_interview_review
 
   # Combined stories with follow-up questions
   - story: User asks about interview tips then preparation
@@ -227,7 +227,7 @@ stories:
       - active_loop: null
       - action: action_check_mock_answer
       - intent: mock_interview_review
-      - action: utter_mock_interview_review
+      - action: action_mock_interview_review
 
   - story: Virtual interview preparation path
     steps:
@@ -301,7 +301,7 @@ stories:
       - active_loop: null
       - action: action_check_mock_answer
       - intent: mock_interview_review
-      - action: utter_mock_interview_review
+      - action: action_mock_interview_review
       - intent: ask_star_method
       - action: utter_star_method
       - intent: ask_for_mock_interview_question
@@ -395,7 +395,7 @@ stories:
       - active_loop: null
       - action: action_check_mock_answer
       - intent: mock_interview_review
-      - action: utter_mock_interview_review
+      - action: action_mock_interview_review
 
   - story: From questions to practice path
     steps:
@@ -512,7 +512,7 @@ stories:
       - active_loop: null
       - action: action_check_mock_answer
       - intent: mock_interview_review
-      - action: utter_mock_interview_review
+      - action: action_mock_interview_review
 
   # Version 4
 
@@ -581,3 +581,22 @@ stories:
       - active_loop: mock_interview_question_form
       - active_loop: null
       - action: action_check_mock_answer
+
+  # Version 6
+
+  - story: Ask for coding question
+    steps:
+      - intent: ask_for_coding_question
+      - action: action_provide_coding_question
+
+  - story: Ask how to prepare for coding
+    steps:
+      - intent: ask_how_to_prepare_coding
+      - action: utter_how_to_prepare_coding
+      - action: action_listen
+
+  - story: Ask how to behave in an interview
+    steps:
+      - intent: ask_how_to_behave
+      - action: utter_how_to_behave
+      - action: action_listen

@@ -215,6 +215,8 @@ nlu:
       - What is the STAR method?
       - How do I use the STAR method?
       - Explain the STAR method
+      - Star Method
+      - Star
 
   # Version 4
 
@@ -259,3 +261,21 @@ nlu:
       - I want to solve a [database](category) problem
       - Give me an [algorithms](category) question about [trees](topic)
       - Show me a [medium](difficulty) [binary-search](topic) problem
+
+  # Version 6
+
+  - intent: ask_how_to_prepare_coding
+    examples: |
+      - How should I prepare for coding interviews?
+      - What's the best way to get ready for coding interviews?
+      - How do I study for coding interviews?
+      - What's the best way to practice for coding interviews?
+      - How can I improve my coding interview skills?
+
+  - intent: ask_how_to_behave
+    examples: |
+      - How should I behave in an interview?
+      - What's the best way to act in an interview?
+      - How do I present myself in an interview?
+      - What's the best way to behave in interviews?
+      - How can I make a good impression in interviews?
