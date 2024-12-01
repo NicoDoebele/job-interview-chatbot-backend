@@ -107,11 +107,6 @@ responses:
 
   utter_bot_challenge:
     - text: "I am a bot."
-      buttons:
-        - title: "Who made you?"
-          payload: "I was created by Nico Doebele."
-        - title: "What were you created in?"
-          payload: "I was created in RASA."
 
   utter_goodbye:
     - text: "Goodbye!"

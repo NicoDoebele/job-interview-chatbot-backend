@@ -230,7 +230,7 @@ class ActionCheckMockAnswer(Action):
             feedback += "You used some of the key points we were looking for."
         else:
             if success_ratio < 0.3:
-                feedback = "Don't worry, interview questions take practice. Try to include keywords like: "
+                feedback = "Sadly the answer was classified as suboptimal. Don't worry though, interview questions take practice. Try to include keywords like: "
             elif success_ratio < 0.5:
                 feedback = "You're making progress, but this answer could be stronger. Consider including: "
             else:

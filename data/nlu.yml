@@ -70,6 +70,8 @@ nlu:
       - Give me some interview advice
       - What are the best practices for interviews?
       - How can I improve my interview performance?
+      - Interview
+      - Upcoming Interview
 
   - intent: ask_how_to_prepare
     examples: |
@@ -150,6 +152,7 @@ nlu:
       - How can you help me?
       - Tell me about yourself
       - What's your purpose?
+      - What are your features?
 
   - intent: help
     examples: |
