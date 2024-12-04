@@ -9,6 +9,7 @@ import random
 import logging
 import requests
 import array
+from transformers import pipeline
 
 logging.getLogger(__name__)
 
@@ -183,6 +184,7 @@ class ActionAskMockInterviewQuestion(Action):
 
         interview_questions = get_interview_questions()
         selected_question = random.sample(interview_questions, 1)[0]
+        #selected_question = interview_questions[1]
         
         question_text = "Answer this interview question: \n"
         question_text += f"{selected_question['question']} \n"
@@ -206,10 +208,25 @@ class ActionCheckMockAnswer(Action):
         questions = get_interview_questions()
         question_id = tracker.get_slot("last_mock_question_id")
         selected_question = [question for question in questions if question["_id"] == question_id][0]
+
+        text_to_classify = """{} \n\n {} \n\n {}""".format(
+            "Please classify the user's answer to the following question. User should follow STAR principles and be thourough.",
+            f"Question: '{selected_question['question']}'",
+            f"User Answer: '{user_response}'",
+            )
+        
+        classifications = ["outstanding answer", "good answer", "passable answer", "poor answer", "terrible answer"]
+
+        classifer = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
+        classification = classifer(text_to_classify, candidate_labels=classifications)
         
         # Check if answer contains keywords
-        answer_successful = any(keyword.lower() in user_response.lower() 
-                              for keyword in selected_question["good_answer_keywords"])
+        #answer_successful = any(keyword.lower() in user_response.lower() 
+        #                      for keyword in selected_question["good_answer_keywords"])
+
+
+        answer_successful = classification["labels"][0] in ["outstanding answer", "good answer", "passable answer"]
+        confidence = classification["scores"][0]
         
         # Update counters
         total_questions += 1
@@ -222,20 +239,21 @@ class ActionCheckMockAnswer(Action):
         # Provide appropriate feedback based on ratio
         if answer_successful:
             if success_ratio > 0.8:
-                feedback = "Excellent job! You're consistently giving strong answers. "
+                feedback = "Excellent job! You're consistently giving strong answers. \n"
             elif success_ratio > 0.6:
-                feedback = "Good work! You're showing solid improvement. "
+                feedback = "Good work! You're showing solid improvement. \n"
             else:
-                feedback = "Well done! Keep practicing to improve further. "
-            feedback += "You used some of the key points we were looking for."
+                feedback = "Well done! Keep practicing to improve further. \n"
+            feedback += f"Your answer was classified as: {classification['labels'][0]} with {confidence:.0%} confidence accross {len(classifications)} categories."
         else:
             if success_ratio < 0.3:
-                feedback = "Sadly the answer was classified as suboptimal. Don't worry though, interview questions take practice. Try to include keywords like: "
+                feedback = "Sadly the answer was classified as suboptimal. Don't worry though, interview questions take practice. Here is an example of a good answer: \n"
             elif success_ratio < 0.5:
-                feedback = "You're making progress, but this answer could be stronger. Consider including: "
+                feedback = "You're making progress, but this answer could be stronger. Here is an example of a good answer: \n"
             else:
-                feedback = "This answer could be improved by including keywords like: "
-            feedback += ", ".join(selected_question["good_answer_keywords"])
+                feedback = "This answer could be improved. Here is an example of a good answer: \n"
+            feedback += f"{selected_question['good_answer_example']} \n"
+            feedback += f"Your answer was classified as: {classification['labels'][0]} with {confidence:.0%} confidence accross {len(classifications)} categories."
 
         # Add performance stats if more than 3 questions attempted
         if total_questions >= 3:
