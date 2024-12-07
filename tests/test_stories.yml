@@ -1,91 +1,137 @@
 #### This file contains tests to evaluate that your bot behaves as expected.
-#### If you want to learn more, please see the docs: https://rasa.com/docs/rasa/testing-your-assistant
 
 stories:
-- story: happy path 1
-  steps:
-  - user: |
-      hello there!
-    intent: greet
-  - action: utter_greet
-  - user: |
-      amazing
-    intent: mood_great
-  - action: utter_happy
+  - story: test basic greeting and interview question
+    steps:
+      - user: |
+          hello
+        intent: greet
+      - action: utter_greet
+      - user: |
+          Can you give me some interview questions?
+        intent: ask_about_interview_questions
+      - action: action_provide_interview_questions
+      - user: |
+          Yes, tell me more about question 1
+        intent: affirm
+      - action: additional_question_details_form
+      - user: |
+          1
+        intent: inform
+        entities:
+          - question_detail_number: "1"
+      - action: action_expand_on_interview_question
 
-- story: happy path 2
-  steps:
-  - user: |
-      hello there!
-    intent: greet
-  - action: utter_greet
-  - user: |
-      amazing
-    intent: mood_great
-  - action: utter_happy
-  - user: |
-      bye-bye!
-    intent: goodbye
-  - action: utter_goodbye
+  - story: test mock interview with STAR method
+    steps:
+      - user: |
+          What is the STAR method?
+        intent: ask_star_method
+      - action: utter_star_method
+      - user: |
+          Can you give me a mock question?
+        intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - user: |
+          In my previous role as a team lead, I faced a challenging project deadline. I organized the team, broke down tasks, and implemented daily stand-ups. Through effective communication and prioritization, we delivered the project two days early.
+        intent: inform
+      - action: action_check_mock_answer
 
-- story: sad path 1
-  steps:
-  - user: |
-      hello
-    intent: greet
-  - action: utter_greet
-  - user: |
-      not good
-    intent: mood_unhappy
-  - action: utter_cheer_up
-  - action: utter_did_that_help
-  - user: |
-      yes
-    intent: affirm
-  - action: utter_happy
+  - story: test coding interview preparation
+    steps:
+      - user: |
+          How do I prepare for coding interviews?
+        intent: ask_how_to_prepare_coding
+      - action: utter_how_to_prepare_coding
+      - user: |
+          Give me a hard tree question
+        intent: ask_for_coding_question
+        entities:
+          - difficulty: "hard"
+          - topic: "tree"
+      - action: action_provide_coding_question
+      - user: |
+          Give me another question
+        intent: another_question
+      - action: action_provide_coding_question
 
-- story: sad path 2
-  steps:
-  - user: |
-      hello
-    intent: greet
-  - action: utter_greet
-  - user: |
-      not good
-    intent: mood_unhappy
-  - action: utter_cheer_up
-  - action: utter_did_that_help
-  - user: |
-      not really
-    intent: deny
-  - action: utter_goodbye
+  - story: test behavioral interview preparation
+    steps:
+      - user: |
+          How should I behave in an interview?
+        intent: ask_how_to_behave
+      - action: utter_how_to_behave
+      - user: |
+          I'm feeling nervous
+        intent: nervous_feelings
+      - action: utter_dealing_with_nervous_feeling
+      - user: |
+          How can I be more confident?
+        intent: ask_confidence_boost
+      - action: utter_confidence_boost
 
-- story: sad path 3
-  steps:
-  - user: |
-      hi
-    intent: greet
-  - action: utter_greet
-  - user: |
-      very terrible
-    intent: mood_unhappy
-  - action: utter_cheer_up
-  - action: utter_did_that_help
-  - user: |
-      no
-    intent: deny
-  - action: utter_goodbye
+  - story: test salary and skills discussion
+    steps:
+      - user: |
+          How do I discuss salary?
+        intent: ask_salary_discussion
+      - action: utter_salary_discussion
+      - user: |
+          Tell me more about that
+        intent: ask_more_info
+      - action: action_handle_more_info
+      - user: |
+          Should I downplay my skills?
+        intent: ask_downlpay_or_upplay_skills
+      - action: utter_downlpay_or_upplay_skills
 
-- story: say goodbye
-  steps:
-  - user: |
-      bye-bye!
-    intent: goodbye
-  - action: utter_goodbye
+  - story: test virtual interview preparation
+    steps:
+      - user: |
+          How do I prepare for a virtual interview?
+        intent: ask_virtual_interview
+      - action: utter_virtual_interview
+      - user: |
+          What should I wear?
+        intent: ask_what_to_wear
+      - action: utter_what_to_wear
+      - user: |
+          What are common mistakes?
+        intent: ask_common_mistakes
+      - action: utter_common_mistakes
 
-- story: bot challenge
-  steps:
-  - user: |
-      are you a bot?
-    intent: bot_challenge
-  - action: utter_iamabot
+  - story: test complete mock interview cycle
+    steps:
+      - user: |
+          Can you ask me a mock question?
+        intent: ask_for_mock_interview_question
+      - action: action_ask_mock_interview_question
+      - action: mock_interview_question_form
+      - user: |
+          I implemented a new feature that increased user engagement by 25%. I identified the opportunity through user feedback, designed the solution, and coordinated with the team to deliver it within sprint deadlines.
+        intent: inform
+      - action: action_check_mock_answer
+      - user: |
+          How did I do overall?
+        intent: mock_interview_review
+      - action: action_mock_interview_review
+
+  - story: test interview tips and preparation
+    steps:
+      - user: |
+          What are some good interview tips?
+        intent: ask_interview_tips
+      - action: utter_interview_tips
+      - user: |
+          How should I prepare?
+        intent: ask_how_to_prepare
+      - action: utter_how_to_prepare
+      - user: |
+          What about the duration?
+        intent: ask_duration_of_interview
+      - action: utter_duration_of_interview
+      - user: |
+          Thanks!
+        intent: thank
+      - action: utter_no_problem
