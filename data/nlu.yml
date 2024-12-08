@@ -279,3 +279,14 @@ nlu:
       - How do I present myself in an interview?
       - What's the best way to behave in interviews?
       - How can I make a good impression in interviews?
+
+  - intent: get_genai_review
+    examples: |
+      - Can you analyze my answers with AI?
+      - Give me an AI review
+      - Review my interview answers with AI
+      - AI Analyze my mock interviews
+      - How does AI think I did in my mock interviews?
+      - Can you review my previous answers with AI?
+      - AI analysis of my answers
+      - Get AI feedback on my answers

@@ -9,7 +9,7 @@ import random
 import logging
 import requests
 import array
-from transformers import pipeline
+from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM
 
 logging.getLogger(__name__)
 
@@ -204,10 +204,23 @@ class ActionCheckMockAnswer(Action):
         user_response = tracker.get_slot("mock_interview_answer")
         total_questions = tracker.get_slot("total_mock_questions") or 0
         successful_questions = tracker.get_slot("successful_mock_questions") or 0
+        mock_history = tracker.get_slot("mock_interview_history") or []
 
         questions = get_interview_questions()
         question_id = tracker.get_slot("last_mock_question_id")
         selected_question = [question for question in questions if question["_id"] == question_id][0]
+        
+        # Store the Q&A in history
+        mock_history.append({
+            "question": selected_question["question"],
+            "answer": user_response,
+            "keywords": selected_question["good_answer_keywords"],
+            "tips": selected_question["good_answer_tips"]
+        })
+        
+        # Keep only last 10 Q&As
+        if len(mock_history) > 10:
+            mock_history = mock_history[-10:]
 
         text_to_classify = """{} \n\n {} \n\n {}""".format(
             "Please classify the user's answer to the following question. User should follow STAR principles and be thourough.",
@@ -220,11 +233,6 @@ class ActionCheckMockAnswer(Action):
         classifer = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
         classification = classifer(text_to_classify, candidate_labels=classifications)
         
-        # Check if answer contains keywords
-        #answer_successful = any(keyword.lower() in user_response.lower() 
-        #                      for keyword in selected_question["good_answer_keywords"])
-
-
         answer_successful = classification["labels"][0] in ["outstanding answer", "good answer", "passable answer"]
         confidence = classification["scores"][0]
         
@@ -263,7 +271,8 @@ class ActionCheckMockAnswer(Action):
         
         return [
             SlotSet("total_mock_questions", total_questions),
-            SlotSet("successful_mock_questions", successful_questions)
+            SlotSet("successful_mock_questions", successful_questions),
+            SlotSet("mock_interview_history", mock_history)
         ]
 
 
@@ -479,4 +488,121 @@ class ActionMockInterviewReview(Action):
             review_text += "Would you like some interview tips or to try another practice question?"
 
         dispatcher.utter_message(text=review_text)
+        return []
+
+class ActionGetGenAIReview(Action):
+    def name(self) -> Text:
+        return "action_get_genai_review"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        total_questions = tracker.get_slot("total_mock_questions") or 0
+        mock_history = tracker.get_slot("mock_interview_history") or []
+        
+        if total_questions < 3:
+            dispatcher.utter_message(text=f"Please answer at least 3 mock interview questions before requesting an AI review. You've answered {total_questions} so far.")
+            return []
+
+        if not mock_history:
+            dispatcher.utter_message(text="No mock interview answers found to review.")
+            return []
+
+        prompt = """As an experienced interview coach, provide a thorough review of these interview responses.
+        Be direct and honest but constructive. Focus on patterns across all answers.
+
+        Interview Responses to Review:
+        """
+        
+        for i, qa in enumerate(mock_history[-3:], 1):
+            prompt += f"\nQuestion {i}: {qa['question']}\n"
+            prompt += f"Response {i}: {qa['answer']}\n"
+
+        prompt += """\nProvide a comprehensive review covering:
+        1. Overall interview performance and communication style
+        2. Effectiveness of STAR method usage
+        3. Key strengths demonstrated across answers
+        4. Main areas needing improvement
+        5. Three specific, actionable recommendations for future interviews
+
+        Keep the feedback constructive but direct. Keep yourself brief. Only reply in plain Text, do not use formatting. You are responding directly to the person who answered the questions."""
+
+        try:
+            # Make request to local Ollama instance
+            response = requests.post(
+                'http://localhost:11434/api/generate',
+                json={
+                    'model': 'llama3.2',
+                    'prompt': prompt,
+                    'stream': False,
+                    'options': {
+                        'temperature': 0.7,
+                        'top_p': 0.9,
+                        'max_tokens': 750
+                    }
+                }
+            )
+            
+            if response.status_code == 200:
+                # Extract the generated text
+                feedback = response.json().get('response', '').strip()
+                
+                # Format and send the feedback
+                formatted_feedback = "Interview Performance Analysis:\n\n"
+                formatted_feedback += feedback
+
+                dispatcher.utter_message(text=formatted_feedback)
+            else:
+                raise Exception(f"Ollama request failed with status {response.status_code}")
+
+        except Exception as e:
+            print(f"Generation error: {e}")
+            # Fallback to zero-shot classification
+            classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
+            
+            feedback = "Interview Performance Review:\n\n"
+            
+            # Analyze overall communication style
+            style_analysis = classifier(
+                " ".join(qa['answer'] for qa in mock_history[-3:]),
+                candidate_labels=["clear and structured", "somewhat organized", "needs more structure"],
+                multi_label=False
+            )
+            
+            # Analyze STAR method usage
+            star_analysis = classifier(
+                " ".join(qa['answer'] for qa in mock_history[-3:]),
+                candidate_labels=["strong STAR usage", "partial STAR usage", "minimal STAR usage"],
+                multi_label=False
+            )
+            
+            feedback += f"Overall Style: {style_analysis['labels'][0]}\n"
+            feedback += f"STAR Method: {star_analysis['labels'][0]}\n\n"
+            
+            feedback += "Key Observations:\n"
+            if style_analysis['labels'][0] == "clear and structured":
+                feedback += "• Your responses are well-structured and professional\n"
+            elif style_analysis['labels'][0] == "somewhat organized":
+                feedback += "• Your answers show good potential but need more consistent structure\n"
+            else:
+                feedback += "• Focus on organizing your responses more clearly\n"
+                
+            if star_analysis['labels'][0] == "strong STAR usage":
+                feedback += "• Excellent use of the STAR method in your answers\n"
+            elif star_analysis['labels'][0] == "partial STAR usage":
+                feedback += "• Try to complete all STAR components in each answer\n"
+            else:
+                feedback += "• Practice incorporating the STAR method more consistently\n"
+
+            feedback += "\nRecommendations:\n"
+            feedback += "1. Start with clear situation descriptions\n"
+            feedback += "2. Detail your specific actions\n"
+            feedback += "3. Always highlight measurable results\n"
+            feedback += "4. Practice structuring answers beforehand\n"
+
+            feedback += "\nTHIS REVIEW WAS LIMITED DUE TO INCOMPLET CHATBOT SETUP"
+
+            dispatcher.utter_message(text=feedback)
+
         return []

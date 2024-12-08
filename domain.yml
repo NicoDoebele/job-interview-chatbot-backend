@@ -32,6 +32,7 @@ intents:
   - ask_for_coding_question
   - ask_how_to_prepare_coding
   - ask_how_to_behave
+  - get_genai_review
 
 entities:
   - difficulty
@@ -48,6 +49,7 @@ actions:
   - action_handle_more_info
   - action_provide_coding_question
   - action_mock_interview_review
+  - action_get_genai_review
 
 forms:
   additional_question_details_form:
@@ -90,6 +92,11 @@ slots:
       - type: custom
   successful_mock_questions:
     type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+  mock_interview_history:
+    type: list
     influence_conversation: false
     mappings:
       - type: custom

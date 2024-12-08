@@ -80,3 +80,8 @@ rules:
     steps:
       - intent: ask_for_coding_question
       - action: action_provide_coding_question
+
+  - rule: Provide GenAI review when requested
+    steps:
+      - intent: get_genai_review
+      - action: action_get_genai_review
