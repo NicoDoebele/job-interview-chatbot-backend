@@ -10,10 +10,14 @@ import logging
 import requests
 import array
 from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM
+import os
 
 logging.getLogger(__name__)
 
 cached_interview_questions = []
+
+# Get OLLAMA_HOST from environment variable, default to localhost
+OLLAMA_HOST = os.getenv('OLLAMA_HOST', 'localhost')
 
 def get_interview_questions():
     global cached_interview_questions
@@ -531,7 +535,7 @@ class ActionGetGenAIReview(Action):
         try:
             # Make request to local Ollama instance
             response = requests.post(
-                'http://localhost:11434/api/generate',
+                f'http://{OLLAMA_HOST}:11434/api/generate',
                 json={
                     'model': 'llama3.2',
                     'prompt': prompt,
