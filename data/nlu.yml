@@ -45,6 +45,7 @@ nlu:
 
   - intent: bot_challenge
     examples: |
+      - Bot?
       - Are you a bot?
       - Are you a human
       - Am I speaking to a bot?
@@ -55,6 +56,8 @@ nlu:
     examples: |
       - Mock question
       - Mock interview question
+      - Mock interview
+      - Mock
       - Can you ask me a mock interview question?
       - Can you give me a mock interview question?
       - Can you provide me with a mock interview question?
@@ -290,3 +293,26 @@ nlu:
       - Can you review my previous answers with AI?
       - AI analysis of my answers
       - Get AI feedback on my answers
+
+  - intent: how_are_you
+    examples: |
+      - How are you?
+      - How are you doing?
+      - How's it going?
+      - How do you feel?
+      - What's up?
+      - How are things?
+      - How's your day?
+      - How are you today?
+      - How have you been?
+      - Are you doing well?
+
+  - intent: ask_dress_code
+    examples: |
+      - What does [business casual](dress_code) look like?
+      - Show me [business formal](dress_code) attire
+      - What should I wear for [smart casual](dress_code)?
+      - How to dress [business professional](dress_code)?
+      - Example of [casual](dress_code) interview attire
+      - What is [formal](dress_code) dress code?
+      - Show [professional](dress_code) outfit

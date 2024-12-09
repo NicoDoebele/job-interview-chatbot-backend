@@ -610,3 +610,31 @@ class ActionGetGenAIReview(Action):
             dispatcher.utter_message(text=feedback)
 
         return []
+
+class ActionShowDressCode(Action):
+    def name(self) -> Text:
+        return "action_show_dress_code"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        # Get the dress code entity
+        dress_code = next((e["value"] for e in tracker.latest_message["entities"] 
+                          if e["entity"] == "dress_code"), None)
+        
+        if not dress_code:
+            dispatcher.utter_message(text="I can help you with dress codes. Please specify which type: business casual, business formal, smart casual, professional, casual, or formal.")
+            return []
+
+        # Normalize the dress code value
+        dress_code = dress_code.lower().replace(" ", "_")
+        
+        # Try to send the appropriate response
+        response_name = f"utter_dress_code_{dress_code}"
+        if response_name in domain.get("responses", {}):
+            dispatcher.utter_message(response=response_name)
+        else:
+            dispatcher.utter_message(text="I'm not familiar with that dress code. I can help with business casual, business formal, smart casual, professional, casual, or formal attire.")
+        
+        return []

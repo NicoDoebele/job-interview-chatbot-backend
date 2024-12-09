@@ -85,3 +85,10 @@ rules:
     steps:
       - intent: get_genai_review
       - action: action_get_genai_review
+
+  # Version 8
+
+  - rule: Respond to dress code questions
+    steps:
+      - intent: ask_dress_code
+      - action: action_show_dress_code

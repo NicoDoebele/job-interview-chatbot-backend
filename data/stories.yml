@@ -600,3 +600,9 @@ stories:
       - intent: ask_how_to_behave
       - action: utter_how_to_behave
       - action: action_listen
+
+  - story: User asks how bot is doing
+    steps:
+      - intent: how_are_you
+      - action: utter_how_are_you
+      - action: action_listen

@@ -33,11 +33,14 @@ intents:
   - ask_how_to_prepare_coding
   - ask_how_to_behave
   - get_genai_review
+  - how_are_you
+  - ask_dress_code
 
 entities:
   - difficulty
   - topic
   - category
+  - dress_code
 
 actions:
   - action_provide_interview_questions
@@ -50,6 +53,7 @@ actions:
   - action_provide_coding_question
   - action_mock_interview_review
   - action_get_genai_review
+  - action_show_dress_code
 
 forms:
   additional_question_details_form:
@@ -195,6 +199,37 @@ responses:
     - text: "Sorry, I don't have any additional information about that topic."
     - text: "I've shared all the information I have on this topic."
     - text: "I can't provide more details about that, but feel free to ask about something else!"
+
+  # Version 8
+
+  utter_how_are_you:
+    - text: "I'm doing great! Ready to help you prepare for your interviews. How can I assist you today?"
+    - text: "I'm well, thanks for asking! Let's focus on getting you ready for your interviews. What would you like help with?"
+    - text: "I'm functioning perfectly and ready to help you with interview preparation. What would you like to work on?"
+
+  utter_dress_code_business_casual:
+    - text: "Business casual typically includes:\n• Khakis or dress pants\n• Button-down shirts or blouses\n• Optional blazer or cardigan\n• Closed-toe dress shoes\n• Minimal accessories"
+      image: "https://raw.githubusercontent.com/NicoDoebele/job-interview-chatbot-backend/refs/heads/main/images/outfits/business-casual.jpeg"
+
+  utter_dress_code_business_formal:
+    - text: "Business formal consists of:\n• Dark suit (navy, charcoal, or black)\n• Dress shirt or blouse\n• Conservative tie\n• Polished dress shoes\n• Minimal, professional accessories"
+      image: "https://raw.githubusercontent.com/NicoDoebele/job-interview-chatbot-backend/refs/heads/main/images/outfits/business-formal.jpeg"
+
+  utter_dress_code_smart_casual:
+    - text: "Smart casual includes:\n• Dress pants or dark jeans\n• Collared shirt or blouse\n• Blazer optional\n• Clean, dressy shoes\n• Simple accessories"
+      image: "https://raw.githubusercontent.com/NicoDoebele/job-interview-chatbot-backend/refs/heads/main/images/outfits/smart-casual.jpeg"
+
+  utter_dress_code_professional:
+    - text: "Professional attire includes:\n• Well-fitted suit\n• Crisp dress shirt or blouse\n• Conservative tie or scarf\n• Polished formal shoes\n• Minimal jewelry"
+      image: "https://raw.githubusercontent.com/NicoDoebele/job-interview-chatbot-backend/refs/heads/main/images/outfits/professional.jpeg"
+
+  utter_dress_code_casual:
+    - text: "Casual interview attire includes:\n• Clean, pressed khakis or dark jeans\n• Collared polo or neat blouse\n• Clean, casual shoes\n• Simple accessories\nNote: Even for casual dress codes, keep it neat and professional"
+      image: "https://raw.githubusercontent.com/NicoDoebele/job-interview-chatbot-backend/refs/heads/main/images/outfits/casual.jpeg"
+
+  utter_dress_code_formal:
+    - text: "Formal business attire consists of:\n• Dark business suit\n• White or light colored dress shirt\n• Conservative tie\n• Dark leather shoes\n• Professional briefcase or portfolio"
+      image: "https://raw.githubusercontent.com/NicoDoebele/job-interview-chatbot-backend/refs/heads/main/images/outfits/formal.jpeg"
 
 session_config:
   session_expiration_time: 60
