@@ -1,7 +1,7 @@
 from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker, ValidationAction
 from rasa_sdk.executor import CollectingDispatcher
-from rasa_sdk.events import SlotSet, ActiveLoop
+from rasa_sdk.events import SlotSet, ActiveLoop, AllSlotsReset, Restarted
 from rasa_sdk.forms import FormValidationAction
 from rasa_sdk.types import DomainDict
 #from supabase import create_client, Client # incompatible with rasa
@@ -439,9 +439,9 @@ class ActionProvideCodingQuestion(Action):
         dispatcher.utter_message(text=question_text)
         return []
 
-class ActionMockInterviewReview(Action):
+class ActionMockInterviewSummary(Action):
     def name(self) -> Text:
-        return "action_mock_interview_review"
+        return "action_mock_interview_summary"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
@@ -456,42 +456,25 @@ class ActionMockInterviewReview(Action):
             
         success_ratio = successful_questions / total_questions
         
-        # Build detailed feedback
-        review_text = f"Here's your mock interview performance review:\n\n"
-        review_text += f"Questions attempted: {total_questions}\n"
-        review_text += f"Successfully answered: {successful_questions}\n"
-        review_text += f"Success rate: {success_ratio:.0%}\n\n"
+        summary_text = f"Mock Interview Summary:\n"
+        summary_text += f"Questions: {total_questions} | Successful: {successful_questions} | Success Rate: {success_ratio:.0%}\n\n"
         
-        # Provide adaptive feedback based on performance
         if success_ratio > 0.8:
-            review_text += "Outstanding performance! Your answers consistently demonstrate:\n"
-            review_text += "• Strong use of relevant keywords\n"
-            review_text += "• Clear structure and examples\n"
-            review_text += "• Professional communication\n\n"
-            review_text += "You're well-prepared for real interviews. Consider practicing more complex scenarios or industry-specific questions."
-        
+            summary_text += "Outstanding! Strong keywords, clear structure, professional delivery.\n"
+            summary_text += "Next step: Try industry-specific scenarios."
         elif success_ratio > 0.6:
-            review_text += "Good progress! Your answers show:\n"
-            review_text += "• Understanding of key concepts\n"
-            review_text += "• Growing confidence\n"
-            review_text += "• Room for more specific examples\n\n"
-            review_text += "To improve further, try incorporating more STAR method examples and industry-specific terminology."
-        
+            summary_text += "Good progress! Clear concepts, growing confidence.\n"
+            summary_text += "Focus on: More STAR examples, specific terminology."
         elif success_ratio > 0.4:
-            review_text += "You're on the right track. Areas to focus on:\n"
-            review_text += "• Including more relevant keywords\n"
-            review_text += "• Structuring answers using the STAR method\n"
-            review_text += "• Providing specific examples\n\n"
-            review_text += "Would you like to learn more about the STAR method or practice with more questions?"
-        
+            summary_text += "On track. Areas to improve:\n"
+            summary_text += "Keywords, STAR method, specific examples."
         else:
-            review_text += "Keep practicing! Here's what can help:\n"
-            review_text += "• Review common interview questions\n"
-            review_text += "• Practice using the STAR method\n"
-            review_text += "• Focus on including relevant keywords\n\n"
-            review_text += "Would you like some interview tips or to try another practice question?"
+            summary_text += "Keep practicing!\n"
+            summary_text += "Focus on: STAR method, keywords, common questions."
 
-        dispatcher.utter_message(text=review_text)
+        summary_text += "\nUse 'get AI review' for detailed analysis."
+        
+        dispatcher.utter_message(text=summary_text)
         return []
 
 class ActionGetGenAIReview(Action):
@@ -638,3 +621,27 @@ class ActionShowDressCode(Action):
             dispatcher.utter_message(text="I'm not familiar with that dress code. I can help with business casual, business formal, smart casual, professional, casual, or formal attire.")
         
         return []
+
+class ActionRestart(Action):
+    def name(self) -> Text:
+        return "action_restart"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        # Clear mock interview stats
+        global cached_interview_questions
+        cached_interview_questions = []
+        
+        # Get the active form if any
+        active_form = tracker.active_loop.get('name')
+        
+        dispatcher.utter_message(text="Starting fresh! All previous data has been cleared.")
+        
+        events = [AllSlotsReset()]
+        if active_form:
+            events.append(ActiveLoop(None))
+        events.append(Restarted())
+        
+        return events

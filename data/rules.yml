@@ -92,3 +92,8 @@ rules:
     steps:
       - intent: ask_dress_code
       - action: action_show_dress_code
+
+  - rule: Restart conversation
+    steps:
+      - intent: restart
+      - action: action_restart

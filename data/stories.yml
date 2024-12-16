@@ -48,7 +48,7 @@ stories:
     steps:
       - intent: ask_how_to_prepare
       - action: utter_how_to_prepare
-      - action: utter_how_else_can_i_help
+      - action: action_listen
 
   - story: User asks about common mistakes
     steps:
@@ -144,10 +144,10 @@ stories:
       - action: utter_star_method
       - action: action_listen
 
-  - story: User asks for mock interview review
+  - story: User asks for mock interview summary
     steps:
-      - intent: mock_interview_review
-      - action: action_mock_interview_review
+      - intent: mock_interview_summary
+      - action: action_mock_interview_summary
 
   # Combined stories with follow-up questions
   - story: User asks about interview tips then preparation
@@ -183,7 +183,7 @@ stories:
       - action: utter_dealing_with_nervous_feeling
       - intent: ask_confidence_boost
       - action: utter_confidence_boost
-      - action: utter_how_else_can_i_help
+      - action: action_listen
 
   - story: Complete interview preparation path
     steps:
@@ -226,8 +226,8 @@ stories:
       - active_loop: mock_interview_question_form
       - active_loop: null
       - action: action_check_mock_answer
-      - intent: mock_interview_review
-      - action: action_mock_interview_review
+      - intent: mock_interview_summary
+      - action: action_mock_interview_summary
 
   - story: Virtual interview preparation path
     steps:
@@ -300,8 +300,8 @@ stories:
       - active_loop: mock_interview_question_form
       - active_loop: null
       - action: action_check_mock_answer
-      - intent: mock_interview_review
-      - action: action_mock_interview_review
+      - intent: mock_interview_summary
+      - action: action_mock_interview_summary
       - intent: ask_star_method
       - action: utter_star_method
       - intent: ask_for_mock_interview_question
@@ -384,6 +384,7 @@ stories:
     steps:
       - intent: ask_how_to_prepare
       - action: utter_how_to_prepare
+      - action: action_listen
       - intent: ask_interview_tips
       - action: utter_interview_tips
       - intent: ask_what_to_wear
@@ -394,8 +395,8 @@ stories:
       - active_loop: mock_interview_question_form
       - active_loop: null
       - action: action_check_mock_answer
-      - intent: mock_interview_review
-      - action: action_mock_interview_review
+      - intent: mock_interview_summary
+      - action: action_mock_interview_summary
 
   - story: From questions to practice path
     steps:
@@ -480,6 +481,8 @@ stories:
       - active_loop: mock_interview_question_form
       - active_loop: null
       - action: action_check_mock_answer
+      - intent: mock_interview_summary
+      - action: action_mock_interview_summary
       - intent: ask_follow_up
       - action: utter_follow_up
       - intent: thank
@@ -501,7 +504,7 @@ stories:
       - intent: ask_confidence_boost
       - action: utter_confidence_boost
 
-  - story: From bot info to practice
+  - story: From bot info to practice with reviews
     steps:
       - intent: about_bot
       - action: utter_about_bot
@@ -511,8 +514,8 @@ stories:
       - active_loop: mock_interview_question_form
       - active_loop: null
       - action: action_check_mock_answer
-      - intent: mock_interview_review
-      - action: action_mock_interview_review
+      - intent: mock_interview_summary
+      - action: action_mock_interview_summary
 
   # Version 4
 
@@ -552,7 +555,12 @@ stories:
 
   # Version 6
 
-  - story: Complete mock interview practice with review
+  - story: User asks for mock interview summary
+    steps:
+      - intent: mock_interview_summary
+      - action: action_mock_interview_summary
+
+  - story: Complete mock interview practice with summary
     steps:
       - intent: ask_for_mock_interview_question
       - action: action_ask_mock_interview_question
@@ -566,15 +574,15 @@ stories:
       - active_loop: mock_interview_question_form
       - active_loop: null
       - action: action_check_mock_answer
-      - intent: mock_interview_review
-      - action: action_mock_interview_review
-      - intent: ask_star_method
-      - action: utter_star_method
+      - intent: mock_interview_summary
+      - action: action_mock_interview_summary
+      - intent: get_genai_review
+      - action: action_get_genai_review
 
   - story: Review performance after practice
     steps:
-      - intent: mock_interview_review
-      - action: action_mock_interview_review
+      - intent: mock_interview_summary
+      - action: action_mock_interview_summary
       - intent: ask_for_mock_interview_question
       - action: action_ask_mock_interview_question
       - action: mock_interview_question_form

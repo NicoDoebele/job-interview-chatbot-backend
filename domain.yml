@@ -25,7 +25,7 @@ intents:
   - need_motivation
   - ask_confidence_boost
   - ask_downlpay_or_upplay_skills
-  - mock_interview_review
+  - mock_interview_summary
   - ask_star_method
   - ask_more_info
   - another_question
@@ -51,17 +51,22 @@ actions:
   - action_validate_slot_mappings
   - action_handle_more_info
   - action_provide_coding_question
-  - action_mock_interview_review
+  - action_mock_interview_summary
   - action_get_genai_review
   - action_show_dress_code
+  - action_restart
 
 forms:
   additional_question_details_form:
     required_slots:
       - question_detail_number
+    ignored_intents:
+      - restart
   mock_interview_question_form:
     required_slots:
       - mock_interview_answer
+    ignored_intents:
+      - restart
 
 slots:
   last_provided_question_ids:
@@ -160,7 +165,31 @@ responses:
     - text: "I'm an interview preparation assistant. I can help with:\n• Mock interviews\n• Common interview questions\n• Interview tips and preparation\n• Handling specific situations\n• Building confidence\nJust ask what you'd like help with!"
 
   utter_help:
-    - text: "I can help with:\n• Practice interview questions\n• Interview preparation tips\n• Common mistakes to avoid\n• Dress code advice\n• Follow-up guidance\n• Confidence building\nWhat would you like to know more about?"
+    - text: "I can help you with interview preparation in several ways:\n
+      📝 Practice:\n
+      • Mock interview questions with feedback\n
+      • Quick stats summary of your performance\n
+      • Detailed AI analysis of your answers\n
+      • Coding interview questions (LeetCode)\n\n
+      💡 Interview Tips:\n
+      • STAR method guidance\n
+      • Common mistakes to avoid\n
+      • Virtual interview preparation\n
+      • Salary negotiation tips\n\n
+      👔 Appearance:\n
+      • Dress code guidance with examples\n
+      • Professional presentation tips\n\n
+      🎯 Specific Help:\n
+      • Confidence building\n
+      • Handling nervousness\n
+      • Follow-up etiquette\n
+      • Question preparation\n\n
+      Try asking things like:\n
+      • 'Give me a mock interview question'\n
+      • 'Show my interview stats'\n
+      • 'Get AI review'\n
+      • 'What is the STAR method?'\n
+      • 'Show business formal dress code'"
 
   utter_dealing_with_nervous_feeling:
     - text: "It's normal to feel nervous! Try these:\n• Practice deep breathing\n• Prepare thoroughly\n• Arrive early to settle in\n• Remember they invited you because they're interested\n• Focus on your achievements\n• View it as a conversation, not an interrogation"

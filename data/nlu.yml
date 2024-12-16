@@ -205,14 +205,6 @@ nlu:
       - Should I be modest about my skills?
       - How to present my experience accurately?
 
-  - intent: mock_interview_review
-    examples: |
-      - How did I do?
-      - Review my mock interview
-      - Give me feedback on my answers
-      - How was my performance?
-      - What could I improve?
-
   - intent: ask_star_method
     examples: |
       - What is the STAR method?
@@ -316,3 +308,28 @@ nlu:
       - Example of [casual](dress_code) interview attire
       - What is [formal](dress_code) dress code?
       - Show [professional](dress_code) outfit
+
+  - intent: restart
+    examples: |
+      - restart
+      - start over
+      - reset
+      - clear everything
+      - begin again
+      - fresh start
+      - start fresh
+      - can we start over
+      - let's start over
+
+  - intent: mock_interview_summary
+    examples: |
+      - show my mock interview summary
+      - summarize my mock interviews
+      - how am I doing in mock interviews
+      - show my interview stats
+      - what's my mock interview performance
+      - show my progress
+      - mock interview stats
+      - interview performance summary
+      - show my stats
+      - how am I performing
