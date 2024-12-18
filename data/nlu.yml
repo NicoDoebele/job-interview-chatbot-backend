@@ -19,6 +19,10 @@ nlu:
 
   - intent: ask_about_interview_questions
     examples: |
+      - Example interview questions
+      - Interview questions
+      - Common interview questions
+      - Can you give me some interview questions?
       - Can you provide me with some interview questions?
       - What are some common interview questions?
       - Can you give me some interview questions?
@@ -26,6 +30,7 @@ nlu:
       - Can you provide me with some questions I might be asked in an interview?
       - Interview questions
       - More interview questions
+      - Provide some example interview questions
 
   - intent: greet
     examples: |
@@ -56,6 +61,7 @@ nlu:
     examples: |
       - Mock question
       - Mock interview question
+      - Provide a mock interview question
       - Mock interview
       - Mock
       - Can you ask me a mock interview question?
@@ -78,6 +84,8 @@ nlu:
 
   - intent: ask_how_to_prepare
     examples: |
+      - How to prepare?
+      - How should I prepare for an interview?
       - How should I prepare for an interview?
       - What should I do before an interview?
       - How do I get ready for my interview?
@@ -99,6 +107,8 @@ nlu:
       - How should I dress for my interview?
       - What clothes are good for interviews?
       - Interview dress code advice?
+      - What should i wear?
+      - What to wear?
 
   - intent: ask_how_to_answer_questions
     examples: |
@@ -159,11 +169,13 @@ nlu:
 
   - intent: help
     examples: |
+      - help
       - I need help
       - Can you help me?
       - What kind of help do you offer?
       - I'm stuck
       - Help me please
+      - Can you assist me?
 
   - intent: nervous_feelings
     examples: |
@@ -256,6 +268,7 @@ nlu:
       - I want to solve a [database](category) problem
       - Give me an [algorithms](category) question about [trees](topic)
       - Show me a [medium](difficulty) [binary-search](topic) problem
+      - Provide an [easy](difficulty) [sorting](topic) leetcode question
 
   # Version 6
 
@@ -285,6 +298,9 @@ nlu:
       - Can you review my previous answers with AI?
       - AI analysis of my answers
       - Get AI feedback on my answers
+      - Let AI review my mock interview
+      - AI review of my mock interviews
+      - AI review mock
 
   - intent: how_are_you
     examples: |
@@ -308,6 +324,7 @@ nlu:
       - Example of [casual](dress_code) interview attire
       - What is [formal](dress_code) dress code?
       - Show [professional](dress_code) outfit
+      - What does [business casual](dress_code) look like?
 
   - intent: restart
     examples: |
@@ -333,3 +350,5 @@ nlu:
       - interview performance summary
       - show my stats
       - how am I performing
+      - Summaryze my mock interview
+      - Summarize my mock interview performance
